@@ -4,7 +4,7 @@ import Footer from "@/app/components/index/Footer";
 
 export default function Home() {
   return (
-    <div className="min-h-screen flex flex-col gap-3">
+    <div className="min-h-screen flex flex-col gap-3 bg-sofka-light">
       <Header />
       <Main />
       <Footer />
