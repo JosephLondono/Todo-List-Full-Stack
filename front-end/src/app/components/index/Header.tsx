@@ -24,7 +24,12 @@ const Header = () => {
             </Link>
           </li>
           <li>
-            <Link href="/auth">Login</Link>
+            <Link
+              href="/auth"
+              className="bg-black rounded-md px-6 py-2 text-white hover:bg-gray-800"
+            >
+              Login
+            </Link>
           </li>
         </ul>
       </nav>
