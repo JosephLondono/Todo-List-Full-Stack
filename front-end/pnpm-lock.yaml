@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@formkit/drag-and-drop':
+        specifier: ^0.2.6
+        version: 0.2.6
       next:
         specifier: 15.1.0
         version: 15.1.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -88,6 +91,9 @@ packages:
   '@eslint/plugin-kit@0.2.4':
     resolution: {integrity: sha512-zSkKow6H5Kdm0ZUQUB2kV5JIXqoG0+uH5YADhaEHswm664N9Db8dXSi0nMJpacpMf+MyyglF1vnZohpEg5yUtg==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
+
+  '@formkit/drag-and-drop@0.2.6':
+    resolution: {integrity: sha512-yBRe5beAIRunguj/XrkW1Q1yiAG8qXyREHnn3H1osCGNUwQ/pLxQk9jbYvMGn+0/vnwa4N/he1MIteLG2GWbdQ==}
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -1702,6 +1708,8 @@ snapshots:
   '@eslint/plugin-kit@0.2.4':
     dependencies:
       levn: 0.4.1
+
+  '@formkit/drag-and-drop@0.2.6': {}
 
   '@humanfs/core@0.19.1': {}
 

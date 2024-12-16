@@ -11,6 +11,9 @@ export default {
       backgroundColor: {
         "sofka-light": "#EFEAE4",
       },
+      gridTemplateColumns: {
+        "task-Item": "1fr auto",
+      },
     },
   },
   plugins: [],
