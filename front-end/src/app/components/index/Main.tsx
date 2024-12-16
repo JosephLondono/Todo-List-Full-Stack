@@ -32,7 +32,7 @@ export const Main = () => {
     },
   ];
   return (
-    <main className="bg-sofka-light flex-1">
+    <main className="flex-1">
       <div className="max-w-7xl flex flex-col w-full mx-auto gap-y-4">
         <h1 className="text-2xl font-semibold mt-2">Lista de tareas</h1>
         <Task
