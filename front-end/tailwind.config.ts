@@ -10,9 +10,16 @@ export default {
     extend: {
       backgroundColor: {
         "sofka-light": "#EFEAE4",
+        "sofka-orange": "#FF7E08",
       },
       gridTemplateColumns: {
         "task-Item": "1fr auto",
+      },
+      ringColor: {
+        "sofka-orange": "#FF7E08",
+      },
+      textColor: {
+        "sofka-orange": "#FF7E08",
       },
     },
   },
