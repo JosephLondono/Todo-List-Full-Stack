@@ -80,6 +80,7 @@ export const SectionLogin: React.FC<SectionLoginProps> = ({
             width={370}
             height={370}
             className="img-background aspect-square object-contain"
+            priority={true}
           />
         </div>
       </div>

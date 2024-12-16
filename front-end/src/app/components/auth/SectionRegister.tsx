@@ -26,6 +26,7 @@ const SectionRegister: React.FC<SectionRegisterProps> = ({
             width={400}
             height={400}
             className="img-background aspect-square object-contain scale-95"
+            priority={true}
           />
         </div>
       </div>

@@ -10,7 +10,9 @@ const Header = () => {
             src="/LogoSofka.png"
             alt="Sofka Technologies"
             width={120}
-            height={50}
+            height={40}
+            priority={true}
+            className="aspect-auto object-contain"
           />
         </Link>
         <nav>
