@@ -14,21 +14,22 @@ export class UsersService {
   ) {}
 
   async createUser(user: UserDto) {
-    const userExistEmail = await this.findUserByEmail(user.email);
+    const userFormatted = formattedUser(user);
+    const userExistEmail = await this.findUserByEmail(userFormatted.email);
 
     if (userExistEmail.length !== 0)
       throw new ConflictException(
         'The user with the email provided already exists',
       );
 
-    const userExistUsername = await this.findUserByUsername(user.username);
+    const userExistUsername = await this.findUserByUsername(
+      userFormatted.username,
+    );
 
     if (userExistUsername.length !== 0)
       throw new ConflictException(
         'The user with the username provided already exists',
       );
-
-    const userFormatted = formattedUser(user);
 
     const userWithPasswordEncrypted = await encryptPassword(userFormatted);
     const newUser = this.UsersRepository.create(userWithPasswordEncrypted);
@@ -110,6 +111,15 @@ export class UsersService {
       userUpdate.password = userWithPasswordEncrypted.password;
     }
 
+    const usernameExist = await this.UsersRepository.findOne({
+      where: { username: userUpdate.username },
+    });
+
+    console.log(usernameExist);
+
+    if (usernameExist)
+      throw new ConflictException('The username already exists');
+
     const userUpdated = await this.UsersRepository.update(user.id, userUpdate);
 
     console.log(userUpdated);
@@ -132,8 +142,8 @@ async function encryptPassword(user: UserDto | UserDeleteDto) {
 }
 
 function formattedUser(user: UserDeleteDto | UserDto) {
-  if (user.email) user.email = user.email.trim();
-  if (user.username) user.username = user.username.trim();
+  if (user.email) user.email = user.email.trim().toLowerCase();
+  if (user.username) user.username = user.username.trim().toLowerCase();
   if (user.password) user.password = user.password.trim();
 
   return user;
