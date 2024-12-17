@@ -100,25 +100,52 @@ export class UsersService {
     if (!userExist) throw new ConflictException('The user does not exist');
 
     const userFormatted = formattedUser(user);
+    console.log('User Formated: ', userFormatted);
 
-    let userUpdate: UsersEntity = {
+    if (
+      !userFormatted.email &&
+      !userFormatted.username &&
+      !userFormatted.password
+    ) {
+      throw new ConflictException(
+        'You must provide at least one field to update',
+      );
+    }
+
+    let userUpdate: UserDto = {
       ...userFormatted,
     } as UsersEntity;
-    if (user.username) userUpdate.username = user.username;
-    if (user.email) userUpdate.email = user.email;
+
+    if (user.username) {
+      // Verificar si el nuevo username es diferente al username actual
+      if (user.username !== userExist.username) {
+        const usernameExist = await this.findUserByUsername(user.username);
+
+        if (usernameExist.length !== 0)
+          throw new ConflictException('The username already exists');
+
+        userUpdate.username = user.username;
+      }
+    }
+
+    if (user.email) {
+      // Verificar si el nuevo email es diferente al email actual
+      if (user.email !== userExist.email) {
+        const emailExist = await this.findUserByEmail(user.email);
+
+        if (emailExist.length !== 0)
+          throw new ConflictException('The email already exists');
+
+        userUpdate.email = user.email;
+      }
+    }
+
     if (user.password) {
       const userWithPasswordEncrypted = await encryptPassword(user);
       userUpdate.password = userWithPasswordEncrypted.password;
     }
 
-    const usernameExist = await this.UsersRepository.findOne({
-      where: { username: userUpdate.username },
-    });
-
-    console.log(usernameExist);
-
-    if (usernameExist)
-      throw new ConflictException('The username already exists');
+    console.log(userUpdate);
 
     const userUpdated = await this.UsersRepository.update(user.id, userUpdate);
 
@@ -142,9 +169,9 @@ async function encryptPassword(user: UserDto | UserDeleteDto) {
 }
 
 function formattedUser(user: UserDeleteDto | UserDto) {
-  if (user.email) user.email = user.email.trim().toLowerCase();
-  if (user.username) user.username = user.username.trim().toLowerCase();
-  if (user.password) user.password = user.password.trim();
+  if (user.email) user.email = user.email.trim().toLowerCase() || null;
+  if (user.username) user.username = user.username.trim().toLowerCase() || null;
+  if (user.password) user.password = user.password.trim() || null;
 
   return user;
 }
