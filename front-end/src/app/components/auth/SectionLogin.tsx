@@ -1,6 +1,9 @@
+"use client";
+import { getCookie, setCookie } from "cookies-next/client";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import { jwtDecode } from "jwt-decode";
 
 interface SectionLoginProps {
   setSectionLogin: (value: boolean) => void;
@@ -11,6 +14,25 @@ export const SectionLogin: React.FC<SectionLoginProps> = ({
   setSectionLogin,
   sectionLogin,
 }) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log("Form submitted");
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const email = (e.currentTarget[0] as HTMLInputElement).value;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const password = (e.currentTarget[1] as HTMLInputElement).value;
+
+    const token =
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoibG9uZG9ub2oiLCJlbWFpbCI6ImxvbmRvbm9qODg4QGdtYWlsLmNvbSJ9";
+    setCookie("session", token);
+    setCookie("session", token, { expires: new Date(Date.now() + 60 * 1000) });
+
+    const tokenGet = getCookie("session");
+    if (tokenGet) {
+      const decoded = jwtDecode(tokenGet);
+      console.log("Token decodificado:", decoded);
+    }
+  };
   return (
     <div
       className={`flex mx-auto bg-white rounded-xl shadow-2xl overflow-hidden max-w-4xl w-full 
@@ -24,7 +46,7 @@ export const SectionLogin: React.FC<SectionLoginProps> = ({
           Por favor, ingrese sus credenciales para poder usar la aplicación
         </p>
         <hr className="border-t-2 border-gray-200 my-3" />
-        <form className="flex flex-col gap-2">
+        <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
           <label className="flex flex-col gap-1">
             <span className="text-sm font-semibold text-gray-700">Correo</span>
             <input
