@@ -100,7 +100,6 @@ export class UsersService {
     if (!userExist) throw new ConflictException('The user does not exist');
 
     const userFormatted = formattedUser(user);
-    console.log('User Formated: ', userFormatted);
 
     if (
       !userFormatted.email &&
@@ -145,11 +144,7 @@ export class UsersService {
       userUpdate.password = userWithPasswordEncrypted.password;
     }
 
-    console.log(userUpdate);
-
     const userUpdated = await this.UsersRepository.update(user.id, userUpdate);
-
-    console.log(userUpdated);
 
     if (userUpdated.affected === 0)
       throw new ConflictException('The user could not be updated');
