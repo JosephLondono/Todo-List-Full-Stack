@@ -11,8 +11,8 @@ const Header = () => {
             alt="Sofka Technologies"
             width={120}
             height={40}
-            priority={true}
             className="aspect-auto object-contain"
+            style={{ width: "auto", height: "auto" }}
           />
         </Link>
         <nav>
