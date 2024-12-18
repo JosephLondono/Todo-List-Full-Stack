@@ -1,7 +1,22 @@
+"use client";
+import { deleteCookie, getCookie } from "cookies-next";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
 const Header = () => {
+  const [token, setToken] = useState<string>("");
+  useEffect(() => {
+    const token = getCookie("accesToken");
+    if (typeof token === "string") {
+      setToken(token);
+    }
+  }, []);
+  const handleLogout = () => {
+    deleteCookie("accesToken");
+    setToken("");
+    window.location.reload();
+  };
   return (
     <header className="w-full bg-white flex justify-center items-center h-14">
       <div className="max-w-7xl flex justify-between items-center px-14 w-full">
@@ -16,7 +31,7 @@ const Header = () => {
           />
         </Link>
         <nav>
-          <ul className="flex space-x-12">
+          <ul className="flex space-x-12 items-center">
             <li>
               <Link
                 href="/"
@@ -26,12 +41,21 @@ const Header = () => {
               </Link>
             </li>
             <li>
-              <Link
-                href="/auth"
-                className="bg-black rounded-md px-6 py-2 text-white hover:bg-gray-800"
-              >
-                Login
-              </Link>
+              {token ? (
+                <button
+                  className="bg-black rounded-md px-6 py-2 text-white hover:bg-gray-800 text-base h-10 block"
+                  onClick={handleLogout}
+                >
+                  Logout
+                </button>
+              ) : (
+                <Link
+                  href="/auth"
+                  className="bg-black rounded-md px-6 py-2 text-white hover:bg-gray-800 text-base h-10 block"
+                >
+                  Login
+                </Link>
+              )}
             </li>
           </ul>
         </nav>
