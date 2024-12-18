@@ -49,10 +49,6 @@ export function Task({
     });
   }, [completeItems]);
 
-  console.log("Incomplete: ", incompleteList);
-  console.log("In Progress: ", inProgressList);
-  console.log("Complete: ", completeList);
-
   return (
     <div className="grid grid-cols-3 min-h-[70vh] gap-x-11 content-stretch">
       <div className="task-container">
