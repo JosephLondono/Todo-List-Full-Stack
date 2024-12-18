@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import * as morgan from 'morgan';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -14,6 +15,17 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
+  const configService = app.get(ConfigService);
+
+  app.enableCors({
+    origin: [
+      configService.get('url.urlFrontDev'),
+      configService.get('url.urlFrontProd'),
+    ],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+    credentials: true,
+  });
 
   const config = new DocumentBuilder()
     .setTitle('Api Todo List')

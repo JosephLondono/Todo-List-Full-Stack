@@ -4,11 +4,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import configurationAuth from './configuration/auth.config';
+import configurationUrl from './configuration/url.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
-      load: [configurationAuth],
+      load: [configurationAuth, configurationUrl],
       envFilePath: '.env',
       isGlobal: true,
     }),
