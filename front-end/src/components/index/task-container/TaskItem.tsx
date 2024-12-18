@@ -28,7 +28,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
     <>
       <div className="task-item grid grid-cols-task-Item gap-x-4 bg-white shadow-sm rounded-lg p-4 mb-2">
         <div>
-          <div className="flex justify-between items-center mb-2">
+          <div className="flex justify-between items-center gap-2">
             <h3 className="font-medium text-lg text-gray-900">{title}</h3>
             <span className="text-xs text-gray-600">{dateEnd}</span>
           </div>
@@ -37,7 +37,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
         <div className="flex justify-end items-center">
           <button
             onClick={handleClick}
-            className="hover:bg-gray-100 p-2 rounded-full"
+            className="hover:bg-gray-100 px-1 py-2 rounded-full"
           >
             <Image src="/points.png" width={20} height={20} alt="options" />
           </button>
