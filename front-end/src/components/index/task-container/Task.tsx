@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useDragAndDrop } from "@formkit/drag-and-drop/react";
 import { TaskItemType } from "@/types/TaskItemType";
 import TaskItem from "./TaskItem";
@@ -30,6 +30,24 @@ export function Task({
   >(completeList, {
     group: "todoList",
   });
+
+  useEffect(() => {
+    incompleteItems.forEach((item) => {
+      item.status = "incomplete";
+    });
+  }, [incompleteItems]);
+
+  useEffect(() => {
+    inProgressItems.forEach((item) => {
+      item.status = "inProgress";
+    });
+  }, [inProgressItems]);
+
+  useEffect(() => {
+    completeItems.forEach((item) => {
+      item.status = "complete";
+    });
+  }, [completeItems]);
 
   return (
     <div className="grid grid-cols-3 min-h-[70vh] gap-x-11 content-stretch">
@@ -68,18 +86,6 @@ export function Task({
           ))}
         </ul>
       </div>
-      <button
-        type="button"
-        onClick={() => {
-          console.log("Obtener Tareas");
-          console.table(incompleteItems);
-          console.table(inProgressItems);
-          console.table(completeItems);
-          console.log("Fin de las tareas");
-        }}
-      >
-        Obtener Tareas
-      </button>
     </div>
   );
 }
