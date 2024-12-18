@@ -28,7 +28,7 @@ export class UsersController {
   constructor(private userService: UsersService) {}
 
   @Post()
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ description: 'Create a new user' })
   @ApiBody({
     description: 'Create a new user',
@@ -61,7 +61,7 @@ export class UsersController {
   }
 
   @Get()
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ description: 'Get all users' })
   @ApiBearerAuth('jwt')
   @ApiResponse({
@@ -77,7 +77,7 @@ export class UsersController {
   }
 
   @Delete('/clear')
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ description: 'Clear all users' })
   @ApiBearerAuth('jwt')
   @ApiResponse({
@@ -93,7 +93,7 @@ export class UsersController {
   }
 
   @Delete('/:id')
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ description: 'Delete a user by ID' })
   @ApiBearerAuth('jwt')
   @ApiResponse({
@@ -113,7 +113,7 @@ export class UsersController {
   }
 
   @Patch()
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ description: 'Update a user' })
   @ApiBody({
     description: 'Update a user',

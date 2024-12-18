@@ -21,7 +21,7 @@ import authConfig from '../../configuration/auth.config';
         return {
           secret: configService.get<string>('auth.secretKey'),
           signOptions: {
-            expiresIn: '3m',
+            expiresIn: '1d',
           },
         };
       },

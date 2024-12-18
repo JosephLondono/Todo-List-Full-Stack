@@ -25,7 +25,7 @@ export class AuthService {
         return user;
       }
     }
-    return null;
+    throw new UnauthorizedException('Invalid credentials');
   }
 
   async login(authCredentials: AuthCredentialsDto) {

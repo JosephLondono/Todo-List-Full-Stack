@@ -5,6 +5,7 @@ import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import configurationAuth from './configuration/auth.config';
 import configurationUrl from './configuration/url.config';
+import { TaskModule } from './modules/task/task.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import configurationUrl from './configuration/url.config';
     }),
     UsersModule,
     AuthModule,
+    TaskModule,
   ],
   controllers: [],
   providers: [],
