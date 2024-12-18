@@ -1,6 +1,6 @@
 "use client";
 import { TaskItemType } from "@/types/TaskItemType";
-import { Task } from "./components/index/task-container/Task";
+import { Task } from "@/components/index/task-container/Task";
 
 export default function Home() {
   return (

@@ -68,6 +68,18 @@ export function Task({
           ))}
         </ul>
       </div>
+      <button
+        type="button"
+        onClick={() => {
+          console.log("Obtener Tareas");
+          console.table(incompleteItems);
+          console.table(inProgressItems);
+          console.table(completeItems);
+          console.log("Fin de las tareas");
+        }}
+      >
+        Obtener Tareas
+      </button>
     </div>
   );
 }

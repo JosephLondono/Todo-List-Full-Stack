@@ -1,8 +1,8 @@
 "use client";
 import { useState } from "react";
 import { getCookie } from "cookies-next/client";
-import { SectionLogin } from "../components/auth/SectionLogin";
-import SectionRegister from "../components/auth/SectionRegister";
+import { SectionLogin } from "@/components/auth/SectionLogin";
+import SectionRegister from "@/components/auth/SectionRegister";
 
 export default function Auth() {
   const [sectionLogin, setSectionLogin] = useState(true);
