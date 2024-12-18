@@ -14,21 +14,22 @@ export class UsersService {
   ) {}
 
   async createUser(user: UserDto) {
-    const userExistEmail = await this.findUserByEmail(user.email);
+    const userFormatted = formattedUser(user);
+    const userExistEmail = await this.findUserByEmail(userFormatted.email);
 
     if (userExistEmail.length !== 0)
       throw new ConflictException(
         'The user with the email provided already exists',
       );
 
-    const userExistUsername = await this.findUserByUsername(user.username);
+    const userExistUsername = await this.findUserByUsername(
+      userFormatted.username,
+    );
 
     if (userExistUsername.length !== 0)
       throw new ConflictException(
         'The user with the username provided already exists',
       );
-
-    const userFormatted = formattedUser(user);
 
     const userWithPasswordEncrypted = await encryptPassword(userFormatted);
     const newUser = this.UsersRepository.create(userWithPasswordEncrypted);
@@ -100,19 +101,50 @@ export class UsersService {
 
     const userFormatted = formattedUser(user);
 
-    let userUpdate: UsersEntity = {
+    if (
+      !userFormatted.email &&
+      !userFormatted.username &&
+      !userFormatted.password
+    ) {
+      throw new ConflictException(
+        'You must provide at least one field to update',
+      );
+    }
+
+    let userUpdate: UserDto = {
       ...userFormatted,
     } as UsersEntity;
-    if (user.username) userUpdate.username = user.username;
-    if (user.email) userUpdate.email = user.email;
+
+    if (user.username) {
+      // Verificar si el nuevo username es diferente al username actual
+      if (user.username !== userExist.username) {
+        const usernameExist = await this.findUserByUsername(user.username);
+
+        if (usernameExist.length !== 0)
+          throw new ConflictException('The username already exists');
+
+        userUpdate.username = user.username;
+      }
+    }
+
+    if (user.email) {
+      // Verificar si el nuevo email es diferente al email actual
+      if (user.email !== userExist.email) {
+        const emailExist = await this.findUserByEmail(user.email);
+
+        if (emailExist.length !== 0)
+          throw new ConflictException('The email already exists');
+
+        userUpdate.email = user.email;
+      }
+    }
+
     if (user.password) {
       const userWithPasswordEncrypted = await encryptPassword(user);
       userUpdate.password = userWithPasswordEncrypted.password;
     }
 
     const userUpdated = await this.UsersRepository.update(user.id, userUpdate);
-
-    console.log(userUpdated);
 
     if (userUpdated.affected === 0)
       throw new ConflictException('The user could not be updated');
@@ -132,9 +164,9 @@ async function encryptPassword(user: UserDto | UserDeleteDto) {
 }
 
 function formattedUser(user: UserDeleteDto | UserDto) {
-  if (user.email) user.email = user.email.trim();
-  if (user.username) user.username = user.username.trim();
-  if (user.password) user.password = user.password.trim();
+  if (user.email) user.email = user.email.trim().toLowerCase() || null;
+  if (user.username) user.username = user.username.trim().toLowerCase() || null;
+  if (user.password) user.password = user.password.trim() || null;
 
   return user;
 }

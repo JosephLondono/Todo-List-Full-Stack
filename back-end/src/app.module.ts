@@ -2,10 +2,13 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from './modules/users/users.module';
+import { AuthModule } from './modules/auth/auth.module';
+import configurationAuth from './configuration/auth.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
+      load: [configurationAuth],
       envFilePath: '.env',
       isGlobal: true,
     }),
@@ -16,6 +19,7 @@ import { UsersModule } from './modules/users/users.module';
       synchronize: true,
     }),
     UsersModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],
