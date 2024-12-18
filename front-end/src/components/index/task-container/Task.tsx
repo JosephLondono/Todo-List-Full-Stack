@@ -49,6 +49,10 @@ export function Task({
     });
   }, [completeItems]);
 
+  console.log("Incomplete: ", incompleteList);
+  console.log("In Progress: ", inProgressList);
+  console.log("Complete: ", completeList);
+
   return (
     <div className="grid grid-cols-3 min-h-[70vh] gap-x-11 content-stretch">
       <div className="task-container">
@@ -58,7 +62,11 @@ export function Task({
           className="flex flex-col gap-y-2 bg-sofka-light h-full mb-2 rounded-lg"
         >
           {incompleteItems.map((incompleteItem) => (
-            <TaskItem {...incompleteItem} key={incompleteItem.id} />
+            <TaskItem
+              {...incompleteItem}
+              key={incompleteItem.id}
+              list={incompleteList}
+            />
           ))}
         </ul>
       </div>
@@ -70,7 +78,11 @@ export function Task({
           className="flex flex-col gap-y-2 bg-sofka-light h-full mb-2 rounded-lg"
         >
           {inProgressItems.map((inProgressItem) => (
-            <TaskItem {...inProgressItem} key={inProgressItem.id} />
+            <TaskItem
+              {...inProgressItem}
+              key={inProgressItem.id}
+              list={inProgressList}
+            />
           ))}
         </ul>
       </div>
@@ -82,7 +94,11 @@ export function Task({
           className="flex flex-col gap-y-2 bg-sofka-light h-full mb-2 rounded-lg"
         >
           {completeItems.map((completeItem) => (
-            <TaskItem {...completeItem} key={completeItem.id} />
+            <TaskItem
+              {...completeItem}
+              key={completeItem.id}
+              list={completeItems}
+            />
           ))}
         </ul>
       </div>

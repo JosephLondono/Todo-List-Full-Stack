@@ -1,37 +1,36 @@
 import { TaskItemType } from "@/types/TaskItemType";
+import { getCookie } from "cookies-next/client";
 
-export const getTask = () => {
-  return Object.groupBy(getAllTask(), (task) => {
-    return task.status;
-  });
+export const getTask = async () => {
+  const task = await fetchingData();
+
+  const { complete = [], inProgress = [], incomplete = [] } = orderTask(task);
+  console.log("Complete: ", complete);
+  console.log("In Progress: ", inProgress);
+  console.log("Incomplete: ", incomplete);
+
+  return { complete, inProgress, incomplete };
 };
 
-const getAllTask = () => {
-  const allTask: TaskItemType[] = [
-    {
-      id: "1",
-      title: "Tarea 1",
-      description: "Beth has a new mix-tape she wants you to listen to.",
-      status: "incomplete",
-    },
-    {
-      id: "2",
-      title: "Tarea 2",
-      description: "Beth has a new mix-tape she wants you to listen to.",
-      status: "incomplete",
-    },
-    {
-      id: "3",
-      title: "Tarea 3",
-      description: "Beth has a new mix-tape she wants you to listen to.",
-      status: "inProgress",
-    },
-    {
-      id: "4",
-      title: "Tarea 4",
-      description: "Beth has a new mix-tape she wants you to listen to.",
-      status: "complete",
-    },
-  ];
-  return allTask;
+const fetchingData = async () => {
+  const token = getCookie("accesToken");
+  try {
+    const res = await fetch("http://localhost:3000/api/v1/task", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    const tasks: TaskItemType[] = await res.json();
+
+    return tasks;
+  } catch (error) {
+    console.error(error);
+    return [];
+  }
+};
+
+const orderTask = (task: TaskItemType[]) => {
+  return Object.groupBy(task, (task) => {
+    return task.status;
+  });
 };
