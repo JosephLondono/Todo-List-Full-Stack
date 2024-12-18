@@ -15,6 +15,9 @@ export default {
       gridTemplateColumns: {
         "task-Item": "1fr auto",
       },
+      gridTemplateRows: {
+        body: "auto 1fr auto",
+      },
       ringColor: {
         "sofka-orange": "#FF7E08",
       },
