@@ -44,7 +44,7 @@ export class TaskDtoUpdate {
   @IsString({
     message: 'The Status must be a string',
   })
-  status: 'incomplete' | 'inprogress' | 'complete';
+  status: 'incomplete' | 'inProgress' | 'complete';
   @IsNotEmpty({
     message: 'The Date is required',
   })

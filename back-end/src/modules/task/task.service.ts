@@ -79,7 +79,7 @@ export class TaskService {
 
     if (
       task.status !== 'incomplete' &&
-      task.status !== 'inprogress' &&
+      task.status !== 'inProgress' &&
       task.status !== 'complete'
     ) {
       throw new ConflictException('Status not valid');
