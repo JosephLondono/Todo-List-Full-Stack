@@ -83,13 +83,18 @@ const TaskItem: React.FC<TaskItemProps> = ({
     }
   };
 
+  const dateNow = new Date().toISOString().split("T")[0];
   return (
     <>
       <div className="task-item grid lg:grid-cols-task-Item gap-x-4 bg-white shadow-sm rounded-lg xl:p-4 cursor-grab lg:p-2 p-2 relative">
         <div>
           <div className="lg:flex lg:justify-between items-center gap-2 md:gap-4 mb-2 mr-8 md:mr-3">
             <h3 className="font-medium text-lg text-gray-900">{task.title}</h3>
-            <span className="text-xs text-gray-600 whitespace-nowrap">
+            <span
+              className={`text-xs whitespace-nowrap font-semibold ${
+                dateNow > task.dateEnd ? "text-red-500" : "text-gray-600"
+              }`}
+            >
               {task.dateEnd ? task.dateEnd.split("T")[0] : ""}
             </span>
           </div>
