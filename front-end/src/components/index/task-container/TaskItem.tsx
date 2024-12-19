@@ -17,7 +17,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
   description,
   id,
   dateEnd,
-  refreshData,
+  refreshData: refreshData,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -50,7 +50,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
         title={title}
         description={description}
         id={id}
-        refreshData={refreshData}
+        reloadTasks={refreshData}
       />
     </>
   );
@@ -60,7 +60,7 @@ interface ModalProps extends Partial<TaskItemType> {
   isOpen: boolean;
   closeModal: () => void;
   id: TaskItemType["id"];
-  refreshData: () => void;
+  reloadTasks: () => void;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -68,26 +68,28 @@ const Modal: React.FC<ModalProps> = ({
   closeModal,
   title: initialTitle,
   description: initialDescription,
+  status: initialStatus,
   id,
-  refreshData,
+  reloadTasks,
 }) => {
   const [title, setTitle] = useState(initialTitle || "");
   const [description, setDescription] = useState(initialDescription || "");
+  const [status, setStatus] = useState(initialStatus || "");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleUpdate = () => {
-    console.log("HOLAAA");
-    console.log(id);
-
     closeModal();
   };
 
   const handleDelete = async () => {
-    console.log("CHAOOO");
-    console.log(id);
     const responseDelete = await deleteTask(id);
-    console.log("RESPONSEEE: ", responseDelete);
-    refreshData();
-    closeModal();
+    if (responseDelete.error) {
+      setErrorMessage(responseDelete.message);
+    } else {
+      closeModal();
+      setErrorMessage("");
+    }
+    reloadTasks();
   };
 
   if (!isOpen) return null;
@@ -102,14 +104,14 @@ const Modal: React.FC<ModalProps> = ({
         className="bg-white rounded-xl shadow-2xl p-6 w-96 max-w-md relative"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 className="text-xl font-bold mb-4 text-gray-800">Edit Task</h2>
+        <h2 className="text-xl font-bold mb-4 text-gray-800">Editar tarea</h2>
 
         <div className="mb-2">
           <label
             htmlFor="title"
             className="block text-sm font-medium text-gray-700 mb-2"
           >
-            Title
+            Titulo
           </label>
           <input
             id="title"
@@ -125,7 +127,7 @@ const Modal: React.FC<ModalProps> = ({
             htmlFor="description"
             className="block text-sm font-medium text-gray-700 mb-2"
           >
-            Description
+            Descripcion
           </label>
           <textarea
             id="description"
@@ -140,27 +142,62 @@ const Modal: React.FC<ModalProps> = ({
             htmlFor="date"
             className="block text-sm font-medium text-gray-700 mb-2"
           >
-            Date
+            Fecha
           </label>
           <input
             id="date"
             type="date"
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            defaultValue={
+              new Date(
+                new Date().getTime() - new Date().getTimezoneOffset() * 60000
+              )
+                .toISOString()
+                .split("T")[0]
+            }
           />
         </div>
+
+        <div className="mb-2">
+          <label
+            htmlFor="status"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Estado
+          </label>
+          <select
+            id="status"
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="incomplete">Incompleta</option>
+            <option value="inProgress">En Proceso</option>
+            <option value="complete">Completada</option>
+          </select>
+        </div>
+        {errorMessage && (
+          <div>
+            <span
+              className={`w-full bg-red-200 px-3 py-1 rounded-xl text-xs text-red-700 text-center max-w-[70%] mx-auto mt-4 block`}
+            >
+              Ha ocurrido un erro al eliminar la tarea
+            </span>
+          </div>
+        )}
         <hr className="bg-black my-6" />
         <div className="flex justify-between space-x-4">
           <button
             onClick={handleUpdate}
             className="flex-1 bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-colors"
           >
-            Update
+            Actualizar
           </button>
           <button
             onClick={handleDelete}
             className="flex-1 bg-red-500 text-white py-2 rounded-md hover:bg-red-600 transition-colors"
           >
-            Delete
+            Eliminar
           </button>
         </div>
 
