@@ -6,6 +6,7 @@ import { JwtPayloadGetDto } from './dto/jwt-payload-get.dto';
 import { UsersService } from '../users/users.service';
 import { TaskDto } from './dto/task.dto';
 import { UsersEntity } from '../users/entity/users.entity';
+import { TaskDtoUpdate } from './dto/taskUpdate.dto';
 
 @Injectable()
 export class TaskService {
@@ -71,5 +72,31 @@ export class TaskService {
         message: 'Task deleted successfully',
       };
     throw new ConflictException('Task not deleted');
+  }
+
+  async updateTask(req, task: TaskDtoUpdate) {
+    const payload: JwtPayloadGetDto = req.user;
+
+    const [user] = await this.userService.findUserByEmail(payload.email);
+
+    const taskUpdate = await this.taskRepository.findOne({
+      where: { id: task.id, user },
+    });
+
+    if (!taskUpdate) throw new ConflictException('Task not found');
+
+    // Actualiza solo las propiedades que existen en TaskEntity
+    taskUpdate.title = task.title;
+    taskUpdate.description = task.description;
+    taskUpdate.status = task.status;
+    taskUpdate.dateEnd = new Date(task.dateEnd);
+
+    const data = await this.taskRepository.save(taskUpdate);
+    if (data)
+      return {
+        success: true,
+        message: 'Task updated successfully',
+      };
+    throw new ConflictException('Task not updated');
   }
 }
