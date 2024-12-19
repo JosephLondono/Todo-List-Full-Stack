@@ -77,6 +77,14 @@ export class TaskService {
   async updateTask(req, task: TaskDtoUpdate) {
     const payload: JwtPayloadGetDto = req.user;
 
+    if (
+      task.status !== 'incomplete' &&
+      task.status !== 'inprogress' &&
+      task.status !== 'complete'
+    ) {
+      throw new ConflictException('Status not valid');
+    }
+
     const [user] = await this.userService.findUserByEmail(payload.email);
 
     const taskUpdate = await this.taskRepository.findOne({
