@@ -1,31 +1,77 @@
 import Image from "next/image";
 import React, { useState } from "react";
 import { type TaskItemType } from "@/types/TaskItemType";
-import { createPortal } from "react-dom";
 import { deleteTask } from "@/lib/taskManager/deleteTask";
 import { updateTask } from "@/lib/taskManager/updateTask";
+import Modal from "@/components/Modal";
 
 interface TaskItemProps {
-  title: TaskItemType["title"];
-  description: TaskItemType["description"];
-  id: TaskItemType["id"];
-  dateEnd: TaskItemType["dateEnd"];
-  status: TaskItemType["status"];
+  task: TaskItemType;
   refreshData: () => void;
 }
 
 const TaskItem: React.FC<TaskItemProps> = ({
-  title,
-  description,
-  id,
-  dateEnd,
-  status,
+  task,
   refreshData: refreshData,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [title, setTitle] = useState(task.title || "");
+  const [description, setDescription] = useState(task.description || "");
+  const [status, setStatus] = useState<
+    "incomplete" | "inProgress" | "complete"
+  >(task.status || "incomplete");
+  const [dateEnd, setDateEnd] = useState(task.dateEnd || "");
+  const [errors, setErrors] = useState<string[]>([]);
 
   const handleClick = () => {
     setIsModalOpen(true);
+  };
+
+  const handleUpdate = async () => {
+    try {
+      const updatedTask: Partial<TaskItemType> = {
+        id: task.id,
+        title: task.title,
+        description: task.description,
+        status: task.status,
+        dateEnd: task.dateEnd,
+      };
+      const responseUpdate = await updateTask(updatedTask);
+
+      if (responseUpdate.error) {
+        if (Array.isArray(responseUpdate.message)) {
+          setErrors(responseUpdate.message);
+        } else {
+          setErrors([responseUpdate.message]);
+        }
+      } else {
+        setIsModalOpen(false);
+        refreshData();
+      }
+    } catch (error) {
+      setErrors([
+        "No se puede actualizar la tarea. Por favor, inténtelo de nuevo.",
+      ]);
+      console.error("Error al actualizar la tarea:", error);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      const responseDelete = await deleteTask(task.id);
+
+      if (responseDelete.error) {
+        console.error(responseDelete.message);
+      } else {
+        setIsModalOpen(false);
+        refreshData();
+      }
+    } catch (error) {
+      setErrors([
+        "No se puede eliminar la tarea. Por favor, inténtelo de nuevo.",
+      ]);
+      console.error("Error al eliminar la tarea:", error);
+    }
   };
 
   return (
@@ -47,106 +93,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
           </button>
         </div>
       </div>
-      <Modal
-        isOpen={isModalOpen}
-        closeModal={() => setIsModalOpen(false)}
-        title={title}
-        description={description}
-        id={id}
-        dateEnd={dateEnd}
-        reloadTasks={refreshData}
-        status={status}
-      />
-    </>
-  );
-};
-
-interface ModalProps {
-  isOpen: boolean;
-  closeModal: () => void;
-  title: TaskItemType["title"];
-  description: TaskItemType["description"];
-  status: TaskItemType["status"];
-  dateEnd: TaskItemType["dateEnd"];
-  id: TaskItemType["id"];
-  reloadTasks: () => void;
-}
-
-const Modal: React.FC<ModalProps> = ({
-  isOpen,
-  closeModal,
-  title: initialTitle,
-  description: initialDescription,
-  status: initialStatus,
-  dateEnd: initialDateEnd,
-  id,
-  reloadTasks,
-}) => {
-  const [title, setTitle] = useState(initialTitle || "");
-  const [description, setDescription] = useState(initialDescription || "");
-  const [status, setStatus] = useState<
-    "incomplete" | "inProgress" | "complete"
-  >(initialStatus || "incomplete");
-  const [dateEnd, setDateEnd] = useState(initialDateEnd || "");
-  const [errors, setErrors] = useState<string[]>([]);
-
-  const handleUpdate = async () => {
-    try {
-      const updatedTask: Partial<TaskItemType> = {
-        id,
-        title,
-        description,
-        status,
-        dateEnd,
-      };
-      const responseUpdate = await updateTask(updatedTask);
-
-      if (responseUpdate.error) {
-        if (Array.isArray(responseUpdate.message)) {
-          setErrors(responseUpdate.message);
-        } else {
-          setErrors([responseUpdate.message]);
-        }
-      } else {
-        closeModal();
-        reloadTasks();
-      }
-    } catch (error) {
-      setErrors([
-        "Error al actualizar la tarea. Por favor, inténtelo de nuevo.",
-      ]);
-      console.error("Error al actualizar la tarea:", error);
-    }
-  };
-
-  const handleDelete = async () => {
-    try {
-      const responseDelete = await deleteTask(id);
-
-      if (responseDelete.error) {
-        console.error(responseDelete.message);
-      } else {
-        closeModal();
-        reloadTasks();
-      }
-    } catch (error) {
-      setErrors(["Error al eliminar la tarea. Por favor, inténtelo de nuevo."]);
-      console.error("Error al eliminar la tarea:", error);
-    }
-  };
-
-  if (!isOpen) return null;
-
-  return createPortal(
-    <div
-      role="dialog"
-      aria-modal="true"
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
-    >
-      <div
-        className="bg-white rounded-xl shadow-2xl p-6 w-96 max-w-md relative max-h-[90%] overflow-y-auto"
-        onClick={(e) => e.stopPropagation()}
-      >
+      <Modal isOpen={isModalOpen} closeModal={() => setIsModalOpen(false)}>
         <h2 className="text-xl font-bold mb-4 text-gray-800">Editar tarea</h2>
 
         {errors.length > 0 && (
@@ -243,16 +190,8 @@ const Modal: React.FC<ModalProps> = ({
             Eliminar
           </button>
         </div>
-
-        <button
-          onClick={closeModal}
-          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
-        >
-          ✕
-        </button>
-      </div>
-    </div>,
-    document.body
+      </Modal>
+    </>
   );
 };
 
