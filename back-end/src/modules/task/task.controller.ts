@@ -6,6 +6,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -37,7 +38,7 @@ export class TaskController {
     return await this.taskService.deleteTask(req, id);
   }
 
-  @Patch()
+  @Put()
   @UseGuards(AuthGuard('jwt'))
   async updateTask(@Req() req, @Body() task: TaskDtoUpdate) {
     return await this.taskService.updateTask(req, task);
