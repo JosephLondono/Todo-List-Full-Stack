@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { type TaskItemType } from "@/types/TaskItemType";
 import { createPortal } from "react-dom";
 import { deleteTask } from "@/lib/taskManager/deleteTask";
+import { updateTask } from "@/lib/taskManager/updateTask";
 
 interface TaskItemProps {
   title: TaskItemType["title"];
@@ -50,6 +51,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
         title={title}
         description={description}
         id={id}
+        dateEnd={dateEnd}
         reloadTasks={refreshData}
       />
     </>
@@ -69,25 +71,40 @@ const Modal: React.FC<ModalProps> = ({
   title: initialTitle,
   description: initialDescription,
   status: initialStatus,
+  dateEnd: initialDateEnd,
   id,
   reloadTasks,
 }) => {
   const [title, setTitle] = useState(initialTitle || "");
   const [description, setDescription] = useState(initialDescription || "");
-  const [status, setStatus] = useState(initialStatus || "");
-  const [errorMessage, setErrorMessage] = useState("");
+  const [status, setStatus] = useState<
+    "incomplete" | "inProgress" | "complete" | undefined
+  >(initialStatus);
+  const [dateEnd, setDateEnd] = useState(initialDateEnd || "");
 
-  const handleUpdate = () => {
-    closeModal();
+  const handleUpdate = async () => {
+    const updatedTask: Partial<TaskItemType> = {
+      id,
+      title,
+      description,
+      status,
+      dateEnd,
+    };
+    const responseUpdate = await updateTask(updatedTask);
+    if (responseUpdate.error) {
+      console.error(responseUpdate.message);
+    } else {
+      closeModal();
+    }
+    reloadTasks();
   };
 
   const handleDelete = async () => {
     const responseDelete = await deleteTask(id);
     if (responseDelete.error) {
-      setErrorMessage(responseDelete.message);
+      console.error(responseDelete.message);
     } else {
       closeModal();
-      setErrorMessage("");
     }
     reloadTasks();
   };
@@ -147,14 +164,9 @@ const Modal: React.FC<ModalProps> = ({
           <input
             id="date"
             type="date"
+            value={dateEnd}
+            onChange={(e) => setDateEnd(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            defaultValue={
-              new Date(
-                new Date().getTime() - new Date().getTimezoneOffset() * 60000
-              )
-                .toISOString()
-                .split("T")[0]
-            }
           />
         </div>
 
@@ -168,7 +180,11 @@ const Modal: React.FC<ModalProps> = ({
           <select
             id="status"
             value={status}
-            onChange={(e) => setStatus(e.target.value)}
+            onChange={(e) =>
+              setStatus(
+                e.target.value as "incomplete" | "inProgress" | "complete"
+              )
+            }
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="incomplete">Incompleta</option>
@@ -176,15 +192,6 @@ const Modal: React.FC<ModalProps> = ({
             <option value="complete">Completada</option>
           </select>
         </div>
-        {errorMessage && (
-          <div>
-            <span
-              className={`w-full bg-red-200 px-3 py-1 rounded-xl text-xs text-red-700 text-center max-w-[70%] mx-auto mt-4 block`}
-            >
-              Ha ocurrido un erro al eliminar la tarea
-            </span>
-          </div>
-        )}
         <hr className="bg-black my-6" />
         <div className="flex justify-between space-x-4">
           <button
