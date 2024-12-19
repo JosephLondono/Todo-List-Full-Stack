@@ -11,6 +11,7 @@ import {
 import { TaskService } from './task.service';
 import { AuthGuard } from '@nestjs/passport';
 import { TaskDto } from './dto/task.dto';
+import { ParseIntPipe } from '../../pipes/parse-int.pipe';
 
 @Controller('/api/v1/task')
 export class TaskController {
@@ -30,7 +31,7 @@ export class TaskController {
 
   @Delete('/:id')
   @UseGuards(AuthGuard('jwt'))
-  async deleteTask(@Req() req, @Param('id') id: number) {
+  async deleteTask(@Req() req, @Param('id', ParseIntPipe) id: number) {
     return await this.taskService.deleteTask(req, id);
   }
 }
