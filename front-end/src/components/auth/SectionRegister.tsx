@@ -1,7 +1,6 @@
 import { setCookie, getCookie } from "cookies-next/client";
 import { jwtDecode } from "jwt-decode";
 import Image from "next/image";
-import Link from "next/link";
 
 interface SectionRegisterProps {
   setSectionLogin: (value: boolean) => void;
@@ -32,12 +31,8 @@ const SectionRegister: React.FC<SectionRegisterProps> = ({
     }
   };
   return (
-    <div
-      className={`flex mx-auto bg-white rounded-xl shadow-2xl overflow-hidden max-w-4xl w-full ${
-        sectionLogin ? "hidden" : "block"
-      }`}
-    >
-      <div className="relative w-[400px] overflow-visible">
+    <div className="flex mx-auto bg-white rounded-xl shadow-2xl overflow-hidden md:max-w-4xl w-[90%]">
+      <div className="relative w-[400px] overflow-visible hidden md:flex">
         <div className="absolute inset-0 bg-[#ebe8ff] transform -rotate-6 origin-center mr-20 scale-150"></div>
         <div className="relative z-10 flex items-center justify-center h-full">
           <Image
@@ -50,10 +45,10 @@ const SectionRegister: React.FC<SectionRegisterProps> = ({
           />
         </div>
       </div>
-      <div className="py-11 px-10 flex-1">
+      <div className="p-7 flex-1">
         <h2 className="text-3xl font-bold text-gray-800 mb-1">Registrarse</h2>
         <p className="max-w-xs text-sm text-gray-600">
-          Por favor, ingrese sus credenciales para poder usar la aplicación
+          Por favor, ingrese su correo electrónico y contraseña para registrarse
         </p>
         <hr className="border-t-2 border-gray-200 my-3" />
         <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
@@ -63,7 +58,7 @@ const SectionRegister: React.FC<SectionRegisterProps> = ({
               type="email"
               placeholder="Ingrese su correo electrónico"
               required
-              className="w-full rounded-lg p-3 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sofka-orange/50 transition-all duration-300 text-gray-700 placeholder-gray-400"
+              className="w-full rounded-lg p-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sofka-orange/50 transition-all duration-300 text-gray-700 placeholder-gray-400"
             />
           </label>
           <label className="flex flex-col gap-1">
@@ -74,20 +69,12 @@ const SectionRegister: React.FC<SectionRegisterProps> = ({
               type="password"
               placeholder="Ingrese su contraseña"
               required
-              className="w-full rounded-lg p-3 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sofka-orange/50 transition-all duration-300 text-gray-700 placeholder-gray-400"
+              className="w-full rounded-lg p-2 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-sofka-orange/50 transition-all duration-300 text-gray-700 placeholder-gray-400"
             />
           </label>
-          <div className="flex justify-end items-center">
-            <Link
-              href="/auth/recover-password"
-              className="text-sm text-sofka-orange hover:underline"
-            >
-              ¿Olvidaste tu contraseña?
-            </Link>
-          </div>
           <button
             type="submit"
-            className="bg-sofka-orange text-white p-3 rounded-lg font-semibold hover:bg-opacity-90 transition-all duration-300 ease-in-out transform hover:-translate-y-1 shadow-md hover:shadow-lg"
+            className="bg-sofka-orange text-white py-2 px-1 rounded-lg font-semibold hover:bg-opacity-90 transition-all duration-300 ease-in-out transform hover:-translate-y-1 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 mt-5"
           >
             Registrarse
           </button>

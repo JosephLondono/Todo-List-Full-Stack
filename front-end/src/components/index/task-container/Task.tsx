@@ -58,12 +58,12 @@ export function Task({
   return (
     <section>
       <HeaderTask refreshTask={refreshData} />
-      <div className="grid grid-cols-3 min-h-[70vh] gap-x-11 content-stretch">
+      <div className="grid lg:grid-cols-3 min-h-[70vh] lg:gap-x-11 lg:content-stretch gap-y-4 lg:gap-y-0 max-w-[80%] mx-auto lg:max-w-[auto]">
         <div className="task-container">
           <h2 className="text-white font-medium text-lg">Tareas Incompletas</h2>
           <ul
             ref={incompleteParent}
-            className="flex flex-col gap-y-2 bg-sofka-light h-full mb-2 rounded-lg max-h-[367px]"
+            className="flex flex-col gap-y-2 bg-sofka-light h-full rounded-lg max-h-[367px]  min-h-[112px]"
           >
             {incompleteItems.map((incompleteItem) => (
               <TaskItem
@@ -79,7 +79,7 @@ export function Task({
           <h2 className="text-white font-medium text-lg">Tareas en proceso</h2>
           <ul
             ref={inProgressParent}
-            className="flex flex-col gap-y-2 bg-sofka-light h-full mb-2 rounded-lg max-h-[367px]"
+            className="flex flex-col gap-y-2 bg-sofka-light h-full rounded-lg max-h-[367px] min-h-[112px]"
           >
             {inProgressItems.map((inProgressItem) => (
               <TaskItem
@@ -95,7 +95,7 @@ export function Task({
           <h2 className="text-white font-medium text-lg">Tareas completadas</h2>
           <ul
             ref={completeParent}
-            className="flex flex-col gap-y-2 bg-sofka-light h-full mb-2 rounded-lg max-h-[367px]"
+            className="flex flex-col gap-y-2 bg-sofka-light h-full rounded-lg max-h-[367px] min-h-[112px]"
           >
             {completeItems.map((completeItem) => (
               <TaskItem

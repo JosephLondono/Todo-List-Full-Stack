@@ -85,17 +85,17 @@ const TaskItem: React.FC<TaskItemProps> = ({
 
   return (
     <>
-      <div className="task-item grid grid-cols-task-Item gap-x-4 bg-white shadow-sm rounded-lg p-4 mb-2 cursor-grab">
+      <div className="task-item grid lg:grid-cols-task-Item gap-x-4 bg-white shadow-sm rounded-lg xl:p-4 cursor-grab lg:p-2 p-2 relative">
         <div>
-          <div className="flex justify-between items-center gap-2">
+          <div className="lg:flex lg:justify-between items-center gap-2 md:gap-4 mb-2 mr-8 md:mr-3">
             <h3 className="font-medium text-lg text-gray-900">{task.title}</h3>
-            <span className="text-xs text-gray-600">
+            <span className="text-xs text-gray-600 whitespace-nowrap">
               {task.dateEnd ? task.dateEnd.split("T")[0] : ""}
             </span>
           </div>
           <p className="text-sm text-gray-700">{task.description}</p>
         </div>
-        <div className="flex justify-end items-center">
+        <div className="flex justify-end items-center absolute right-1 top-1/2  transform -translate-y-1/2">
           <button
             onClick={handleClick}
             className="hover:bg-gray-100 px-1 py-2 rounded-full"

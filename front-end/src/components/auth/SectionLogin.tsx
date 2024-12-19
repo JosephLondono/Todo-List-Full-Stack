@@ -85,10 +85,7 @@ export const SectionLogin: React.FC<SectionLoginProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [messageError, setMessageError] = useState("");
   return (
-    <div
-      className={`flex mx-auto bg-white rounded-xl shadow-2xl overflow-hidden max-w-4xl w-full 
-      }`}
-    >
+    <div className="flex mx-auto bg-white rounded-xl shadow-2xl overflow-hidden lg:max-w-4xl lg:w-full w-[90%]">
       <div className="p-7 flex-1">
         <h2 className="text-3xl font-bold text-gray-800 mb-1">
           Iniciar Sesión
@@ -152,7 +149,7 @@ export const SectionLogin: React.FC<SectionLoginProps> = ({
           </p>
         </form>
       </div>
-      <div className="relative w-[400px]">
+      <div className="relative w-[400px] md:block hidden">
         <div className="absolute inset-0 bg-[#ebe8ff] transform rotate-6 scale-150 ml-20"></div>
         <div className="relative z-10 items-center justify-center flex h-full">
           <Image
