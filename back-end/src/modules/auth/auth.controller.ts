@@ -8,6 +8,7 @@ import {
   ApiOperation,
   ApiResponse,
 } from '@nestjs/swagger';
+import { UserDto } from '../users/dto/user.dto';
 
 @Controller('/api/v1/auth')
 export class AuthController {
@@ -57,5 +58,29 @@ export class AuthController {
   @ApiBearerAuth('jwt')
   dataUser(@Req() request) {
     return request.user;
+  }
+
+  @Post('register')
+  @ApiOperation({
+    description: 'Permitted to register',
+  })
+  @ApiBody({
+    description: 'Permit the user to register',
+    type: AuthCredentialsDto,
+    examples: {
+      example1: {
+        value: {
+          email: 'example@email.com',
+          password: 'password',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'User registered',
+  })
+  register(@Body() authCredentials: UserDto) {
+    return this.authService.register(authCredentials);
   }
 }
