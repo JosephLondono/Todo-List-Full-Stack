@@ -1,11 +1,62 @@
-import React from "react";
+import React, { useState } from "react";
+import Modal from "../Modal";
+import { createTask } from "@/lib/taskManager/createTask";
 
 const HeaderTask = ({ refreshTask }: { refreshTask: () => void }) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalTitle, setModalTitle] = useState("");
+  const [modalDescription, setModalDescription] = useState("");
+  const [modalStatus, setModalStatus] = useState<
+    "incomplete" | "inProgress" | "complete"
+  >("incomplete");
+  const [modalDateEnd, setModalDateEnd] = useState(
+    new Date().toISOString().split("T")[0]
+  );
+  const [errors, setErrors] = useState<string[]>([]);
+
+  const handleCreate = async () => {
+    try {
+      const newTask = {
+        title: modalTitle,
+        description: modalDescription,
+        status: modalStatus,
+        dateEnd: modalDateEnd,
+      };
+      const responseCreate = await createTask(newTask);
+      if (responseCreate.error) {
+        if (Array.isArray(responseCreate.message)) {
+          setErrors(responseCreate.message);
+        } else {
+          setErrors([responseCreate.message]);
+        }
+      } else {
+        handleCloseModal(false);
+        refreshTask();
+      }
+    } catch (error) {
+      setErrors(["No se puede crear la tarea. Por favor, inténtelo de nuevo."]);
+      console.error("Error al crear la tarea:", error);
+    }
+  };
+
+  const addTask = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = (value: boolean) => {
+    setIsModalOpen(value);
+    setModalTitle("");
+    setModalDescription("");
+    setModalStatus("incomplete");
+    setModalDateEnd(new Date().toISOString().split("T")[0]);
+    setErrors([]);
+  };
+
   return (
     <div className="flex justify-between items-center mb-4">
       <h1 className="text-2xl font-semibold">Lista de tareas</h1>
       <div className="flex gap-2 items-center justify-center mr-4">
-        <button type="button" title="Agregar tarea">
+        <button type="button" title="Agregar tarea" onClick={addTask}>
           <svg
             width="30"
             height="30"
@@ -39,6 +90,104 @@ const HeaderTask = ({ refreshTask }: { refreshTask: () => void }) => {
           </svg>
         </button>
       </div>
+      <Modal isOpen={isModalOpen} closeModal={() => handleCloseModal(false)}>
+        <h2 className="text-xl font-bold mb-4 text-gray-800">Crear tarea</h2>
+
+        {errors.length > 0 && (
+          <div className="mb-4 bg-red-200 py-1 px-2 rounded-md">
+            <ul className="text-red-700 text-sm">
+              {errors.map((error, index) => (
+                <li key={index}>{error}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
+        <div className="mb-2">
+          <label
+            htmlFor="title"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Titulo
+          </label>
+          <input
+            id="title"
+            type="text"
+            value={modalTitle}
+            onChange={(e) => setModalTitle(e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <div className="mb-2">
+          <label
+            htmlFor="description"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Descripcion
+          </label>
+          <textarea
+            id="description"
+            value={modalDescription}
+            onChange={(e) => setModalDescription(e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 h-24 max-h-32 min-h-fit"
+          />
+        </div>
+
+        <div className="mb-2">
+          <label
+            htmlFor="date"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Fecha
+          </label>
+          <input
+            id="date"
+            type="date"
+            value={modalDateEnd}
+            onChange={(e) => setModalDateEnd(e.target.value)}
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+        </div>
+
+        <div className="mb-2">
+          <label
+            htmlFor="status"
+            className="block text-sm font-medium text-gray-700 mb-2"
+          >
+            Estado
+          </label>
+          <select
+            id="status"
+            value={modalStatus}
+            onChange={(e) =>
+              setModalStatus(
+                e.target.value as "incomplete" | "inProgress" | "complete"
+              )
+            }
+            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="incomplete">Incompleta</option>
+            <option value="inProgress">En Proceso</option>
+            <option value="complete">Completada</option>
+          </select>
+        </div>
+        <hr className="bg-black my-6" />
+        <div className="flex justify-between space-x-4">
+          <button
+            onClick={handleCreate}
+            className="flex-1 bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-colors"
+          >
+            Crear
+          </button>
+          <button
+            onClick={() => handleCloseModal(false)}
+            className="flex-1 bg-gray-500 text-white py-2 rounded-md hover:bg-gray-600 transition-colors"
+          >
+            Cancelar
+          </button>
+        </div>
+      </Modal>
     </div>
   );
 };
