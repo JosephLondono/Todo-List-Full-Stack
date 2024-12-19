@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { type TaskItemType } from "@/types/TaskItemType";
 import { deleteTask } from "@/lib/taskManager/deleteTask";
 import { updateTask } from "@/lib/taskManager/updateTask";
@@ -15,13 +15,22 @@ const TaskItem: React.FC<TaskItemProps> = ({
   refreshData: refreshData,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [title, setTitle] = useState(task.title || "");
-  const [description, setDescription] = useState(task.description || "");
-  const [status, setStatus] = useState<
+  const [modalTitle, setModalTitle] = useState("");
+  const [modalDescription, setModalDescription] = useState("");
+  const [modalStatus, setModalStatus] = useState<
     "incomplete" | "inProgress" | "complete"
-  >(task.status || "incomplete");
-  const [dateEnd, setDateEnd] = useState(task.dateEnd || "");
+  >("incomplete");
+  const [modalDateEnd, setModalDateEnd] = useState("");
   const [errors, setErrors] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (task) {
+      setModalTitle(task.title || "");
+      setModalDescription(task.description || "");
+      setModalStatus(task.status || "incomplete");
+      setModalDateEnd(task.dateEnd ? task.dateEnd.split("T")[0] : "");
+    }
+  }, [task]);
 
   const handleClick = () => {
     setIsModalOpen(true);
@@ -31,10 +40,10 @@ const TaskItem: React.FC<TaskItemProps> = ({
     try {
       const updatedTask: Partial<TaskItemType> = {
         id: task.id,
-        title: task.title,
-        description: task.description,
-        status: task.status,
-        dateEnd: task.dateEnd,
+        title: modalTitle,
+        description: modalDescription,
+        status: modalStatus,
+        dateEnd: modalDateEnd,
       };
       const responseUpdate = await updateTask(updatedTask);
 
@@ -79,10 +88,12 @@ const TaskItem: React.FC<TaskItemProps> = ({
       <div className="task-item grid grid-cols-task-Item gap-x-4 bg-white shadow-sm rounded-lg p-4 mb-2 cursor-grab">
         <div>
           <div className="flex justify-between items-center gap-2">
-            <h3 className="font-medium text-lg text-gray-900">{title}</h3>
-            <span className="text-xs text-gray-600">{dateEnd}</span>
+            <h3 className="font-medium text-lg text-gray-900">{task.title}</h3>
+            <span className="text-xs text-gray-600">
+              {task.dateEnd ? task.dateEnd.split("T")[0] : ""}
+            </span>
           </div>
-          <p className="text-sm text-gray-700">{description}</p>
+          <p className="text-sm text-gray-700">{task.description}</p>
         </div>
         <div className="flex justify-end items-center">
           <button
@@ -116,8 +127,8 @@ const TaskItem: React.FC<TaskItemProps> = ({
           <input
             id="title"
             type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            value={modalTitle}
+            onChange={(e) => setModalTitle(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
@@ -131,8 +142,8 @@ const TaskItem: React.FC<TaskItemProps> = ({
           </label>
           <textarea
             id="description"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            value={modalDescription}
+            onChange={(e) => setModalDescription(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 h-24 max-h-32 min-h-fit"
           />
         </div>
@@ -147,8 +158,8 @@ const TaskItem: React.FC<TaskItemProps> = ({
           <input
             id="date"
             type="date"
-            value={dateEnd}
-            onChange={(e) => setDateEnd(e.target.value)}
+            value={modalDateEnd}
+            onChange={(e) => setModalDateEnd(e.target.value)}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
@@ -162,9 +173,9 @@ const TaskItem: React.FC<TaskItemProps> = ({
           </label>
           <select
             id="status"
-            value={status}
+            value={modalStatus}
             onChange={(e) =>
-              setStatus(
+              setModalStatus(
                 e.target.value as "incomplete" | "inProgress" | "complete"
               )
             }
