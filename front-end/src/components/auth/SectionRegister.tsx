@@ -1,6 +1,8 @@
-import { setCookie, getCookie } from "cookies-next/client";
+import { TokenPayload } from "@/types/TokenPayload";
+import { setCookie } from "cookies-next/client";
 import { jwtDecode } from "jwt-decode";
 import Image from "next/image";
+import { useState } from "react";
 
 interface SectionRegisterProps {
   setSectionLogin: (value: boolean) => void;
@@ -11,23 +13,56 @@ const SectionRegister: React.FC<SectionRegisterProps> = ({
   setSectionLogin,
   sectionLogin,
 }) => {
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [messageError, setMessageError] = useState("");
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    setIsSubmitting(true);
     e.preventDefault();
-    console.log("Form submitted");
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const email = (e.currentTarget[0] as HTMLInputElement).value;
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const password = (e.currentTarget[1] as HTMLInputElement).value;
 
-    const token =
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYW1lIjoibG9uZG9ub2oiLCJlbWFpbCI6ImxvbmRvbm9qODg4QGdtYWlsLmNvbSJ9";
-    setCookie("session", token);
-    setCookie("session", token, { expires: new Date(Date.now() + 60 * 1000) });
+    const credentials = {
+      email,
+      password,
+    };
 
-    const tokenGet = getCookie("session");
-    if (tokenGet) {
-      const decoded = jwtDecode(tokenGet);
-      console.log("Token decodificado:", decoded);
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
+      const response = await fetch(
+        "http://localhost:3000/api/v1/auth/register",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(credentials),
+        }
+      );
+      const messageResponse = await response.json();
+
+      if (!response.ok) {
+        throw new Error(messageResponse.message);
+      }
+      if (typeof messageResponse.accesToken === "string") {
+        const expirationDate = getExpirationDate(messageResponse.accesToken);
+
+        if (expirationDate) {
+          const maxAge = getMaxAge(expirationDate);
+          setCookie("accesToken", messageResponse.accesToken, { maxAge });
+        } else {
+          setCookie("accesToken", messageResponse.accesToken);
+        }
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+        window.location.href = "/";
+      } else {
+        throw new Error("Invalid token format");
+      }
+    } catch (error) {
+      const mError = error as Error;
+      setMessageError(mError.message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
   return (
@@ -74,10 +109,18 @@ const SectionRegister: React.FC<SectionRegisterProps> = ({
           </label>
           <button
             type="submit"
-            className="bg-sofka-orange text-white py-2 px-1 rounded-lg font-semibold hover:bg-opacity-90 transition-all duration-300 ease-in-out transform hover:-translate-y-1 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 mt-5"
+            className="bg-sofka-orange text-white py-2 px-1 rounded-lg font-semibold hover:bg-opacity-90 transition-all duration-300 ease-in-out transform hover:-translate-y-1 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+            disabled={isSubmitting}
           >
-            Registrarse
+            {isSubmitting ? "Registrando..." : "Registrarse"}
           </button>
+          <span
+            className={`w-full bg-red-200 px-3 py-1 rounded-xl text-xs text-red-700 text-center max-w-[70%] mx-auto mt-2 ${
+              messageError ? "block" : "hidden"
+            }`}
+          >
+            {messageError}
+          </span>
           <p className="text-xs text-gray-600 text-center">
             ¿Ya tienes una cuenta?{" "}
             <button
@@ -95,3 +138,22 @@ const SectionRegister: React.FC<SectionRegisterProps> = ({
 };
 
 export default SectionRegister;
+const getExpirationDate = (token: string): Date | null => {
+  try {
+    const decoded = jwtDecode<TokenPayload>(token);
+    if (decoded.exp) {
+      const expirationDate = new Date(decoded.exp * 1000);
+      return expirationDate;
+    }
+    return null;
+  } catch (error) {
+    console.error("Error decoding token:", error);
+    return null;
+  }
+};
+
+const getMaxAge = (expirationDate: Date): number => {
+  const now = new Date();
+  const maxAge = Math.floor((expirationDate.getTime() - now.getTime()) / 1000);
+  return maxAge;
+};
