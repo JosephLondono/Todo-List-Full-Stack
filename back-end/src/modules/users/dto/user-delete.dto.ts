@@ -19,16 +19,6 @@ export class UserDeleteDto {
   id!: number;
 
   @ApiProperty({
-    name: 'username',
-    type: String,
-    description: 'Username of the user',
-    required: false,
-  })
-  @IsString()
-  @IsOptional()
-  username?: string;
-
-  @ApiProperty({
     name: 'email',
     type: String,
     description: 'Email of the user',

@@ -22,16 +22,6 @@ export class UserDto {
   id: number;
 
   @ApiProperty({
-    name: 'username',
-    type: String,
-    description: 'Username of the user',
-    required: true,
-  })
-  @IsNotEmpty({ message: 'Username is required' })
-  @IsString({ message: 'Username must be a string' })
-  username: string;
-
-  @ApiProperty({
     name: 'email',
     type: String,
     description: 'Email of the user',

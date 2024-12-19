@@ -22,15 +22,6 @@ export class UsersService {
         'The user with the email provided already exists',
       );
 
-    const userExistUsername = await this.findUserByUsername(
-      userFormatted.username,
-    );
-
-    if (userExistUsername.length !== 0)
-      throw new ConflictException(
-        'The user with the username provided already exists',
-      );
-
     const userWithPasswordEncrypted = await encryptPassword(userFormatted);
     const newUser = this.UsersRepository.create(userWithPasswordEncrypted);
     const userSaved = await this.UsersRepository.save(newUser);
@@ -50,21 +41,9 @@ export class UsersService {
     return user;
   }
 
-  async findUserByUsername(username: string) {
-    const user = await this.UsersRepository.find({
-      where: { username },
-    });
-    if (!user)
-      throw new ConflictException(
-        'El usuario con el username proporcionado no existe',
-      );
-
-    return user;
-  }
-
   async getUsers() {
     return await this.UsersRepository.find({
-      select: ['id', 'username', 'email'],
+      select: ['id', 'email'],
     });
   }
 
@@ -101,11 +80,7 @@ export class UsersService {
 
     const userFormatted = formattedUser(user);
 
-    if (
-      !userFormatted.email &&
-      !userFormatted.username &&
-      !userFormatted.password
-    ) {
+    if (!userFormatted.email && !userFormatted.password) {
       throw new ConflictException(
         'You must provide at least one field to update',
       );
@@ -114,18 +89,6 @@ export class UsersService {
     let userUpdate: UserDto = {
       ...userFormatted,
     } as UsersEntity;
-
-    if (user.username) {
-      // Verificar si el nuevo username es diferente al username actual
-      if (user.username !== userExist.username) {
-        const usernameExist = await this.findUserByUsername(user.username);
-
-        if (usernameExist.length !== 0)
-          throw new ConflictException('The username already exists');
-
-        userUpdate.username = user.username;
-      }
-    }
 
     if (user.email) {
       // Verificar si el nuevo email es diferente al email actual
@@ -165,7 +128,6 @@ async function encryptPassword(user: UserDto | UserDeleteDto) {
 
 function formattedUser(user: UserDeleteDto | UserDto) {
   if (user.email) user.email = user.email.trim().toLowerCase() || null;
-  if (user.username) user.username = user.username.trim().toLowerCase() || null;
   if (user.password) user.password = user.password.trim() || null;
 
   return user;
