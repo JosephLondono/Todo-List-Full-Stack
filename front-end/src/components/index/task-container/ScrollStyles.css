@@ -1,0 +1,21 @@
+/* Contenedor con scroll solo si es necesario */
+.task-container ul {
+  overflow-y: auto; /* El scroll solo aparece cuando sea necesario */
+  scrollbar-width: thin; /* Para Firefox */
+  scrollbar-color: #ff7e08 #1e1e1e; /* Para Firefox */
+}
+
+/* Estilo del scrollbar para navegadores WebKit */
+.task-container ul::-webkit-scrollbar {
+  width: 8px; /* Ancho del scrollbar */
+}
+
+.task-container ul::-webkit-scrollbar-track {
+  background: #1e1e1e; /* Color del fondo del track */
+  border-radius: 5px; /* Redondear bordes */
+}
+
+.task-container ul::-webkit-scrollbar-thumb {
+  background-color: #ff7e08; /* Color del scrollbar */
+  border-radius: 5px; /* Redondear bordes */
+}

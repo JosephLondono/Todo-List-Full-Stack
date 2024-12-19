@@ -2,21 +2,22 @@ import Image from "next/image";
 import React, { useState } from "react";
 import { type TaskItemType } from "@/types/TaskItemType";
 import { createPortal } from "react-dom";
+import { deleteTask } from "@/lib/taskManager/deleteTask";
 
 interface TaskItemProps {
   title: TaskItemType["title"];
   description: TaskItemType["description"];
   id: TaskItemType["id"];
-  list: TaskItemType[];
   dateEnd: TaskItemType["dateEnd"];
+  refreshData: () => void;
 }
 
 const TaskItem: React.FC<TaskItemProps> = ({
   title,
   description,
   id,
-  list,
   dateEnd,
+  refreshData,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -26,7 +27,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
 
   return (
     <>
-      <div className="task-item grid grid-cols-task-Item gap-x-4 bg-white shadow-sm rounded-lg p-4 mb-2">
+      <div className="task-item grid grid-cols-task-Item gap-x-4 bg-white shadow-sm rounded-lg p-4 mb-2 cursor-grab">
         <div>
           <div className="flex justify-between items-center gap-2">
             <h3 className="font-medium text-lg text-gray-900">{title}</h3>
@@ -49,6 +50,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
         title={title}
         description={description}
         id={id}
+        refreshData={refreshData}
       />
     </>
   );
@@ -57,6 +59,8 @@ const TaskItem: React.FC<TaskItemProps> = ({
 interface ModalProps extends Partial<TaskItemType> {
   isOpen: boolean;
   closeModal: () => void;
+  id: TaskItemType["id"];
+  refreshData: () => void;
 }
 
 const Modal: React.FC<ModalProps> = ({
@@ -65,18 +69,24 @@ const Modal: React.FC<ModalProps> = ({
   title: initialTitle,
   description: initialDescription,
   id,
+  refreshData,
 }) => {
   const [title, setTitle] = useState(initialTitle || "");
   const [description, setDescription] = useState(initialDescription || "");
 
   const handleUpdate = () => {
     console.log("HOLAAA");
+    console.log(id);
+
     closeModal();
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     console.log("CHAOOO");
     console.log(id);
+    const responseDelete = await deleteTask(id);
+    console.log("RESPONSEEE: ", responseDelete);
+    refreshData();
     closeModal();
   };
 
