@@ -5,7 +5,6 @@ import { Repository } from 'typeorm';
 import { JwtPayloadGetDto } from './dto/jwt-payload-get.dto';
 import { UsersService } from '../users/users.service';
 import { TaskDto } from './dto/task.dto';
-import { UsersEntity } from '../users/entity/users.entity';
 import { TaskDtoUpdate } from './dto/taskUpdate.dto';
 
 @Injectable()
@@ -93,11 +92,13 @@ export class TaskService {
 
     if (!taskUpdate) throw new ConflictException('Task not found');
 
-    // Actualiza solo las propiedades que existen en TaskEntity
     taskUpdate.title = task.title;
     taskUpdate.description = task.description;
     taskUpdate.status = task.status;
-    taskUpdate.dateEnd = new Date(task.dateEnd);
+
+    const dateEnd = new Date(task.dateEnd);
+    dateEnd.setMinutes(dateEnd.getMinutes() + dateEnd.getTimezoneOffset());
+    taskUpdate.dateEnd = dateEnd;
 
     const data = await this.taskRepository.save(taskUpdate);
     if (data)
