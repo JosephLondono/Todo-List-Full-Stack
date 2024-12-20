@@ -46,8 +46,6 @@ export const SectionLogin: React.FC<SectionLoginProps> = ({
     };
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-
       const response = await fetch(
         `${
           process.env.NEXT_PUBLIC_URL_PROD_BACKEND ||
@@ -75,7 +73,6 @@ export const SectionLogin: React.FC<SectionLoginProps> = ({
         } else {
           setCookie("accesToken", messageResponse.accesToken);
         }
-        await new Promise((resolve) => setTimeout(resolve, 2000));
         window.location.href = "/";
       } else {
         throw new Error("Invalid token format");
