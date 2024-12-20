@@ -69,7 +69,7 @@ export default function Home() {
             <div className="flex flex-col sm:flex-row gap-4 mt-4">
               <Link
                 href="/auth"
-                className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 text-center"
+                className="px-6 py-3 bg-sofka-orange text-white rounded-lg hover:bg-sofka-orange/80 transition-colors duration-200 text-center"
               >
                 Iniciar Sesión
               </Link>
