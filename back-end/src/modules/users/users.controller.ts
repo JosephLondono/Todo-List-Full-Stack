@@ -43,7 +43,6 @@ export class UsersController {
       },
     },
   })
-  @ApiBearerAuth('jwt')
   @ApiResponse({
     status: 201,
     description: 'The user has been successfully created.',
@@ -63,7 +62,6 @@ export class UsersController {
   @Get()
   // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ description: 'Get all users' })
-  @ApiBearerAuth('jwt')
   @ApiResponse({
     status: 200,
     description: 'Successfully retrieved users.',
@@ -79,7 +77,6 @@ export class UsersController {
   @Delete('/clear')
   // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ description: 'Clear all users' })
-  @ApiBearerAuth('jwt')
   @ApiResponse({
     status: 200,
     description: 'Successfully cleared users.',
@@ -95,7 +92,6 @@ export class UsersController {
   @Delete('/:id')
   // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ description: 'Delete a user by ID' })
-  @ApiBearerAuth('jwt')
   @ApiResponse({
     status: 200,
     description: 'Successfully deleted user.',
@@ -128,7 +124,6 @@ export class UsersController {
       },
     },
   })
-  @ApiBearerAuth('jwt')
   @ApiResponse({
     status: 200,
     description: 'Successfully updated user.',
