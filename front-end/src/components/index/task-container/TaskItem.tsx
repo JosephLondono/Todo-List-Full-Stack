@@ -86,7 +86,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
   const dateNow = new Date().toISOString().split("T")[0];
   return (
     <>
-      <div className="task-item grid lg:grid-cols-task-Item gap-x-4 bg-white shadow-sm rounded-lg xl:p-4 cursor-grab lg:p-2 p-2 relative">
+      <div className="task-item grid lg:grid-cols-task-Item gap-x-4 bg-white shadow-sm rounded-lg xl:p-4 lg:p-2 p-2 relative">
         <div>
           <div className="lg:flex lg:justify-between items-center gap-2 md:gap-4 mb-2 mr-8 md:mr-3">
             <h3 className="font-medium text-lg text-gray-900">{task.title}</h3>
@@ -99,6 +99,16 @@ const TaskItem: React.FC<TaskItemProps> = ({
             </span>
           </div>
           <p className="text-sm text-gray-700">{task.description}</p>
+          <div className="flex justify-center items-center cursor-grab">
+            <span className="px-1 py-2 rounded-full h-8 w-8 flex justify-center items-center lg:absolute right-1 bottom-0 text-gray-700 handle-task-item">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 256">
+                <path
+                  fill="currentColor"
+                  d="M144 48a48 48 0 1 0-96 0 48 48 0 1 0 96 0zm160 0a48 48 0 1 0-96 0 48 48 0 1 0 96 0zM416 96A48 48 0 1 0 416 0a48 48 0 1 0 0 96zM144 208a48 48 0 1 0-96 0 48 48 0 1 0 96 0zm160 0a48 48 0 1 0-96 0 48 48 0 1 0 96 0zM416 256a48 48 0 1 0 0-96 48 48 0 1 0 0 96z"
+                />
+              </svg>
+            </span>
+          </div>
         </div>
         <div className="flex justify-end items-center absolute right-1 top-1/2  transform -translate-y-1/2">
           <button

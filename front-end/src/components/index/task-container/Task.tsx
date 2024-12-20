@@ -18,16 +18,19 @@ export function Task({
   const [incompleteParent, incompleteItems, __setValuesIncomplete] =
     useDragAndDrop<HTMLUListElement, TaskItemType>(incompleteList, {
       group: "todoList",
+      dragHandle: ".handle-task-item",
     });
   const [inProgressParent, inProgressItems, __setValuesInProgress] =
     useDragAndDrop<HTMLUListElement, TaskItemType>(inProgressList, {
       group: "todoList",
+      dragHandle: ".handle-task-item",
     });
   const [completeParent, completeItems, __setValuesComplete] = useDragAndDrop<
     HTMLUListElement,
     TaskItemType
   >(completeList, {
     group: "todoList",
+    dragHandle: ".handle-task-item",
   });
 
   useEffect(() => {
