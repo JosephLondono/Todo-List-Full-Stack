@@ -1,3 +1,4 @@
+// filepath: /C:/Users/joseph.londono/Documents/Prueba Tecnica Sena/back-end/src/modules/users/users.service.ts
 import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UsersEntity } from './entity/users.entity';
@@ -19,7 +20,7 @@ export class UsersService {
 
     if (userExistEmail.length !== 0)
       throw new ConflictException(
-        'The user with the email provided already exists',
+        'El usuario con el email proporcionado ya existe',
       );
 
     const userWithPasswordEncrypted = await encryptPassword(userFormatted);
@@ -58,16 +59,16 @@ export class UsersService {
       where: { id },
     });
 
-    if (!user) throw new ConflictException('The user does not exist');
+    if (!user) throw new ConflictException('El usuario no existe');
 
     const userDelete = await this.UsersRepository.delete({
       id,
     });
     if (userDelete.affected === 0)
-      throw new ConflictException('The user could not be deleted');
+      throw new ConflictException('El usuario no pudo ser eliminado');
 
     return {
-      message: 'The user has been deleted successfully',
+      message: 'El usuario ha sido eliminado exitosamente',
     };
   }
 
@@ -76,13 +77,13 @@ export class UsersService {
       where: { id: user.id },
     });
 
-    if (!userExist) throw new ConflictException('The user does not exist');
+    if (!userExist) throw new ConflictException('El usuario no existe');
 
     const userFormatted = formattedUser(user);
 
     if (!userFormatted.email && !userFormatted.password) {
       throw new ConflictException(
-        'You must provide at least one field to update',
+        'Debe proporcionar al menos un campo para actualizar',
       );
     }
 
@@ -96,7 +97,7 @@ export class UsersService {
         const emailExist = await this.findUserByEmail(user.email);
 
         if (emailExist.length !== 0)
-          throw new ConflictException('The email already exists');
+          throw new ConflictException('El email ya existe');
 
         userUpdate.email = user.email;
       }
@@ -110,10 +111,10 @@ export class UsersService {
     const userUpdated = await this.UsersRepository.update(user.id, userUpdate);
 
     if (userUpdated.affected === 0)
-      throw new ConflictException('The user could not be updated');
+      throw new ConflictException('El usuario no pudo ser actualizado');
 
     return {
-      message: 'The user has been updated successfully',
+      message: 'El usuario ha sido actualizado exitosamente',
       newDataUser: formattedUsersWhitoutPassword(userUpdate),
     };
   }

@@ -8,39 +8,42 @@ import {
 
 export class TaskDto {
   @IsNotEmpty({
-    message: 'The Title is required',
+    message: 'El título es obligatorio',
   })
   @IsString({
-    message: 'The Title must be a string',
+    message: 'El título debe ser una cadena de texto',
   })
   @MinLength(4, {
-    message: 'The Title must be at least 4 characters',
+    message: 'El título debe tener al menos 4 caracteres',
   })
   title: string;
 
-  @IsNotEmpty()
+  @IsNotEmpty({
+    message: 'La descripción es obligatoria',
+  })
   @IsString({
-    message: 'The Description must be a string',
+    message: 'La descripción debe ser una cadena de texto',
   })
   @MinLength(10, {
-    message: 'The Description must be at least 10 characters',
+    message: 'La descripción debe tener al menos 10 caracteres',
   })
   description: string;
 
   @IsNotEmpty({
-    message: 'The Status is required',
+    message: 'El estado es obligatorio',
   })
   @IsString({
-    message: 'The Status must be a string',
+    message: 'El estado debe ser una cadena de texto',
   })
   status: 'incomplete' | 'inprogress' | 'complete';
+
   @IsNotEmpty({
-    message: 'The Date is required',
+    message: 'La fecha es obligatoria',
   })
   @IsDateString(
     {},
     {
-      message: 'The Date must be a date',
+      message: 'La fecha debe ser una fecha válida',
     },
   )
   dateEnd: string;

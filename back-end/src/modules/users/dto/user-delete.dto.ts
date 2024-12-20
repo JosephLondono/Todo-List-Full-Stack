@@ -11,17 +11,17 @@ export class UserDeleteDto {
   @ApiProperty({
     name: 'id',
     type: Number,
-    description: 'User ID (Primary Key)',
+    description: 'ID del usuario (Clave primaria)',
     required: true,
   })
   @IsNumber()
-  @IsNotEmpty({ message: 'ID is required' })
+  @IsNotEmpty({ message: 'El ID es obligatorio' })
   id!: number;
 
   @ApiProperty({
     name: 'email',
     type: String,
-    description: 'Email of the user',
+    description: 'Email del usuario',
     required: false,
   })
   @IsEmail()
@@ -31,7 +31,7 @@ export class UserDeleteDto {
   @ApiProperty({
     name: 'password',
     type: String,
-    description: 'Password of the user',
+    description: 'Contraseña del usuario',
     required: false,
   })
   @IsString()
