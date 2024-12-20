@@ -176,13 +176,13 @@ const HeaderTask = ({ refreshTask }: { refreshTask: () => void }) => {
         <div className="flex justify-between space-x-4">
           <button
             onClick={handleCreate}
-            className="flex-1 bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-colors"
+            className="flex-1 bg-sofka-orange text-white py-2 rounded-md hover:bg-sofka-orange/80 transition-colors"
           >
             Crear
           </button>
           <button
             onClick={() => handleCloseModal(false)}
-            className="flex-1 bg-gray-500 text-white py-2 rounded-md hover:bg-gray-600 transition-colors"
+            className="flex-1 bg-red-500 text-white py-2 rounded-md hover:bg-red-400 transition-colors"
           >
             Cancelar
           </button>

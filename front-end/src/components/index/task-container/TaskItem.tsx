@@ -195,7 +195,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
         <div className="flex justify-between space-x-4">
           <button
             onClick={handleUpdate}
-            className="flex-1 bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-colors"
+            className="flex-1 bg-sofka-orange text-white py-2 rounded-md hover:bg-sofka-orange/80 transition-colors"
           >
             Actualizar
           </button>
