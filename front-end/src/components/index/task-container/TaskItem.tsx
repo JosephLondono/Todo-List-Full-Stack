@@ -100,7 +100,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
           </div>
           <p className="text-sm text-gray-700">{task.description}</p>
           <div className="flex justify-center items-center cursor-grab">
-            <span className="px-1 py-2 rounded-full h-8 w-8 flex justify-center items-center lg:absolute right-1 bottom-0 text-gray-700 handle-task-item">
+            <span className="px-1 py-2 rounded-full h-8 w-8 flex justify-center items-center xl:absolute right-1 bottom-0 text-gray-700 handle-task-item">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 256">
                 <path
                   fill="currentColor"
