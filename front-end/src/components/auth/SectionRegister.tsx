@@ -30,7 +30,10 @@ const SectionRegister: React.FC<SectionRegisterProps> = ({
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
       const response = await fetch(
-        "http://localhost:3000/api/v1/auth/register",
+        `${
+          process.env.NEXT_PUBLIC_URL_PROD_BACKEND ||
+          process.env.NEXT_PUBLIC_URL_DEV_BACKEND
+        }/api/v1/auth/register`,
         {
           method: "POST",
           headers: {

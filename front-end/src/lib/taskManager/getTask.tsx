@@ -15,11 +15,17 @@ export const getTask = async () => {
 const fetchingData = async () => {
   const token = getCookie("accesToken");
   try {
-    const res = await fetch("http://localhost:3000/api/v1/task", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const res = await fetch(
+      `${
+        process.env.NEXT_PUBLIC_URL_PROD_BACKEND ||
+        process.env.NEXT_PUBLIC_URL_DEV_BACKEND
+      }/api/v1/task`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     const tasks: TaskItemType[] = await res.json();
 
     return tasks;

@@ -48,13 +48,19 @@ export const SectionLogin: React.FC<SectionLoginProps> = ({
     try {
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
-      const response = await fetch("http://localhost:3000/api/v1/auth", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(credentials),
-      });
+      const response = await fetch(
+        `${
+          process.env.NEXT_PUBLIC_URL_PROD_BACKEND ||
+          process.env.NEXT_PUBLIC_URL_DEV_BACKEND
+        }/api/v1/auth`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(credentials),
+        }
+      );
       const messageResponse = await response.json();
 
       if (!response.ok) {
