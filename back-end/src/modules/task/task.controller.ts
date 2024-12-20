@@ -23,19 +23,19 @@ import {
   ApiBody,
 } from '@nestjs/swagger';
 
-@ApiTags('tasks')
+@ApiTags('tareas')
 @Controller('/api/v1/task')
 export class TaskController {
   constructor(private taskService: TaskService) {}
 
   @Get()
   @ApiOperation({
-    summary: 'Get all tasks',
-    description: 'Retrieve all tasks for the authenticated user',
+    summary: 'Obtener todas las tareas',
+    description: 'Recuperar todas las tareas para el usuario autenticado',
   })
   @ApiBearerAuth('jwt')
-  @ApiResponse({ status: 200, description: 'Tasks retrieved successfully' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  @ApiResponse({ status: 200, description: 'Tareas recuperadas exitosamente' })
+  @ApiResponse({ status: 401, description: 'No autorizado' })
   @UseGuards(AuthGuard('jwt'))
   async getTasks(@Req() req) {
     return await this.taskService.getTasks(req);
@@ -43,22 +43,22 @@ export class TaskController {
 
   @Post()
   @ApiOperation({
-    summary: 'Create a new task',
-    description: 'Create a new task for the authenticated user',
+    summary: 'Crear una nueva tarea',
+    description: 'Crear una nueva tarea para el usuario autenticado',
   })
   @ApiBearerAuth('jwt')
-  @ApiResponse({ status: 201, description: 'Task created successfully' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 409, description: 'Conflict' })
+  @ApiResponse({ status: 201, description: 'Tarea creada exitosamente' })
+  @ApiResponse({ status: 401, description: 'No autorizado' })
+  @ApiResponse({ status: 409, description: 'Conflicto' })
   @ApiBody({
-    description: 'Task data',
+    description: 'Datos de la tarea',
     type: TaskDto,
     examples: {
       example1: {
-        summary: 'Example task',
+        summary: 'Ejemplo de tarea',
         value: {
-          title: 'New Task',
-          description: 'Task description',
+          title: 'Nueva Tarea',
+          description: 'Descripción de la tarea',
           status: 'incomplete',
           dateEnd: '2024-12-31',
         },
@@ -72,13 +72,13 @@ export class TaskController {
 
   @Delete('/:id')
   @ApiOperation({
-    summary: 'Delete a task by ID',
-    description: 'Delete a task by its ID for the authenticated user',
+    summary: 'Eliminar una tarea por ID',
+    description: 'Eliminar una tarea por su ID para el usuario autenticado',
   })
   @ApiBearerAuth('jwt')
-  @ApiResponse({ status: 200, description: 'Task deleted successfully' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 409, description: 'Conflict' })
+  @ApiResponse({ status: 200, description: 'Tarea eliminada exitosamente' })
+  @ApiResponse({ status: 401, description: 'No autorizado' })
+  @ApiResponse({ status: 409, description: 'Conflicto' })
   @UseGuards(AuthGuard('jwt'))
   async deleteTask(@Req() req, @Param('id', ParseIntPipe) id: number) {
     return await this.taskService.deleteTask(req, id);
@@ -86,23 +86,23 @@ export class TaskController {
 
   @Put()
   @ApiOperation({
-    summary: 'Update a task',
-    description: 'Update a task for the authenticated user',
+    summary: 'Actualizar una tarea',
+    description: 'Actualizar una tarea para el usuario autenticado',
   })
   @ApiBearerAuth('jwt')
-  @ApiResponse({ status: 200, description: 'Task updated successfully' })
-  @ApiResponse({ status: 401, description: 'Unauthorized' })
-  @ApiResponse({ status: 409, description: 'Conflict' })
+  @ApiResponse({ status: 200, description: 'Tarea actualizada exitosamente' })
+  @ApiResponse({ status: 401, description: 'No autorizado' })
+  @ApiResponse({ status: 409, description: 'Conflicto' })
   @ApiBody({
-    description: 'Updated task data',
+    description: 'Datos de la tarea actualizada',
     type: TaskDtoUpdate,
     examples: {
       example1: {
-        summary: 'Example updated task',
+        summary: 'Ejemplo de tarea actualizada',
         value: {
           id: 1,
-          title: 'Updated Task',
-          description: 'Updated task description',
+          title: 'Tarea Actualizada',
+          description: 'Descripción de la tarea actualizada',
           status: 'inProgress',
           dateEnd: '2024-12-31',
         },

@@ -23,15 +23,15 @@ import { UserDeleteDto } from './dto/user-delete.dto';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('/api/v1/users')
-@ApiTags('Users')
+@ApiTags('Usuarios')
 export class UsersController {
   constructor(private userService: UsersService) {}
 
   @Post()
   // @UseGuards(AuthGuard('jwt'))
-  @ApiOperation({ description: 'Create a new user' })
+  @ApiOperation({ description: 'Crear un nuevo usuario' })
   @ApiBody({
-    description: 'Create a new user',
+    description: 'Crear un nuevo usuario',
     type: UserDto,
     examples: {
       example1: {
@@ -45,15 +45,15 @@ export class UsersController {
   })
   @ApiResponse({
     status: 201,
-    description: 'The user has been successfully created.',
+    description: 'El usuario ha sido creado exitosamente.',
   })
   @ApiResponse({
     status: 409,
-    description: 'The user already exists.',
+    description: 'El usuario ya existe.',
   })
   @ApiResponse({
     status: 401,
-    description: 'Unauthorized',
+    description: 'No autorizado',
   })
   async createUser(@Body() user: UserDto) {
     return await this.userService.createUser(user);
@@ -61,14 +61,14 @@ export class UsersController {
 
   @Get()
   // @UseGuards(AuthGuard('jwt'))
-  @ApiOperation({ description: 'Get all users' })
+  @ApiOperation({ description: 'Obtener todos los usuarios' })
   @ApiResponse({
     status: 200,
-    description: 'Successfully retrieved users.',
+    description: 'Usuarios recuperados exitosamente.',
   })
   @ApiResponse({
     status: 401,
-    description: 'Unauthorized',
+    description: 'No autorizado',
   })
   async getUsers() {
     return await this.userService.getUsers();
@@ -76,14 +76,14 @@ export class UsersController {
 
   @Delete('/clear')
   // @UseGuards(AuthGuard('jwt'))
-  @ApiOperation({ description: 'Clear all users' })
+  @ApiOperation({ description: 'Eliminar todos los usuarios' })
   @ApiResponse({
     status: 200,
-    description: 'Successfully cleared users.',
+    description: 'Usuarios eliminados exitosamente.',
   })
   @ApiResponse({
     status: 401,
-    description: 'Unauthorized',
+    description: 'No autorizado',
   })
   async clearUsers() {
     return await this.userService.clearUsers();
@@ -91,18 +91,18 @@ export class UsersController {
 
   @Delete('/:id')
   // @UseGuards(AuthGuard('jwt'))
-  @ApiOperation({ description: 'Delete a user by ID' })
+  @ApiOperation({ description: 'Eliminar un usuario por ID' })
   @ApiResponse({
     status: 200,
-    description: 'Successfully deleted user.',
+    description: 'Usuario eliminado exitosamente.',
   })
   @ApiResponse({
     status: 401,
-    description: 'Unauthorized',
+    description: 'No autorizado',
   })
   @ApiResponse({
     status: 404,
-    description: 'User not found.',
+    description: 'Usuario no encontrado.',
   })
   async deleteUserById(@Param('id', ParseIntPipe) id: number) {
     return await this.userService.deleteUserById(id);
@@ -110,9 +110,9 @@ export class UsersController {
 
   @Patch()
   // @UseGuards(AuthGuard('jwt'))
-  @ApiOperation({ description: 'Update a user' })
+  @ApiOperation({ description: 'Actualizar un usuario' })
   @ApiBody({
-    description: 'Update a user',
+    description: 'Actualizar un usuario',
     type: UserDeleteDto,
     examples: {
       example1: {
@@ -126,15 +126,15 @@ export class UsersController {
   })
   @ApiResponse({
     status: 200,
-    description: 'Successfully updated user.',
+    description: 'Usuario actualizado exitosamente.',
   })
   @ApiResponse({
     status: 401,
-    description: 'Unauthorized',
+    description: 'No autorizado',
   })
   @ApiResponse({
     status: 404,
-    description: 'User not found.',
+    description: 'Usuario no encontrado.',
   })
   async updateUser(@Body() user: UserDeleteDto) {
     return await this.userService.updateUser(user);

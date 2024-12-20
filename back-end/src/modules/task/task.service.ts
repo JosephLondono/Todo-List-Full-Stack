@@ -37,7 +37,7 @@ export class TaskService {
 
     const [user] = await this.userService.findUserByEmail(payload.email);
 
-    if (!user) throw new ConflictException('User not found');
+    if (!user) throw new ConflictException('Usuario no encontrado');
 
     const newTask = this.taskRepository.create({
       ...task,
@@ -48,9 +48,9 @@ export class TaskService {
     if (data)
       return {
         success: true,
-        message: 'Task created successfully',
+        message: 'Tarea creada exitosamente',
       };
-    throw new ConflictException('Task not created');
+    throw new ConflictException('Tarea no creada');
   }
 
   async deleteTask(req, id: number) {
@@ -62,15 +62,15 @@ export class TaskService {
       where: { id, user },
     });
 
-    if (!task) throw new ConflictException('Task not found');
+    if (!task) throw new ConflictException('Tarea no encontrada');
 
     const data = await this.taskRepository.delete(task.id);
     if (data)
       return {
         success: true,
-        message: 'Task deleted successfully',
+        message: 'Tarea eliminada exitosamente',
       };
-    throw new ConflictException('Task not deleted');
+    throw new ConflictException('Tarea no eliminada');
   }
 
   async updateTask(req, task: TaskDtoUpdate) {
@@ -81,7 +81,7 @@ export class TaskService {
       task.status !== 'inProgress' &&
       task.status !== 'complete'
     ) {
-      throw new ConflictException('Status not valid');
+      throw new ConflictException('Estado no válido');
     }
 
     const [user] = await this.userService.findUserByEmail(payload.email);
@@ -90,7 +90,7 @@ export class TaskService {
       where: { id: task.id, user },
     });
 
-    if (!taskUpdate) throw new ConflictException('Task not found');
+    if (!taskUpdate) throw new ConflictException('Tarea no encontrada');
 
     taskUpdate.title = task.title;
     taskUpdate.description = task.description;
@@ -104,8 +104,8 @@ export class TaskService {
     if (data)
       return {
         success: true,
-        message: 'Task updated successfully',
+        message: 'Tarea actualizada exitosamente',
       };
-    throw new ConflictException('Task not updated');
+    throw new ConflictException('Tarea no actualizada');
   }
 }

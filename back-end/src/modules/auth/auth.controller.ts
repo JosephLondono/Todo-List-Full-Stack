@@ -16,10 +16,10 @@ export class AuthController {
 
   @Post()
   @ApiOperation({
-    description: 'Permitted to login',
+    description: 'Permitir iniciar sesión',
   })
   @ApiBody({
-    description: 'Permit the user to login',
+    description: 'Permitir al usuario iniciar sesión',
     type: AuthCredentialsDto,
     examples: {
       example1: {
@@ -32,11 +32,11 @@ export class AuthController {
   })
   @ApiResponse({
     status: 201,
-    description: 'User logged in',
+    description: 'Usuario ha iniciado sesión',
   })
   @ApiResponse({
     status: 401,
-    description: 'Unauthorized',
+    description: 'No autorizado',
   })
   login(@Body() authCredentials: AuthCredentialsDto) {
     return this.authService.login(authCredentials);
@@ -45,15 +45,15 @@ export class AuthController {
   @Get('data-user')
   @UseGuards(AuthGuard('jwt'))
   @ApiOperation({
-    description: 'Permitted to get data user',
+    description: 'Permitir obtener datos del usuario',
   })
   @ApiResponse({
     status: 200,
-    description: 'Data user',
+    description: 'Datos del usuario',
   })
   @ApiResponse({
     status: 401,
-    description: 'Unauthorized',
+    description: 'No autorizado',
   })
   @ApiBearerAuth('jwt')
   dataUser(@Req() request) {
@@ -62,10 +62,10 @@ export class AuthController {
 
   @Post('register')
   @ApiOperation({
-    description: 'Permitted to register',
+    description: 'Permitir registrarse',
   })
   @ApiBody({
-    description: 'Permit the user to register',
+    description: 'Permitir al usuario registrarse',
     type: AuthCredentialsDto,
     examples: {
       example1: {
@@ -78,7 +78,7 @@ export class AuthController {
   })
   @ApiResponse({
     status: 201,
-    description: 'User registered',
+    description: 'Usuario registrado',
   })
   register(@Body() authCredentials: UserDto) {
     return this.authService.register(authCredentials);

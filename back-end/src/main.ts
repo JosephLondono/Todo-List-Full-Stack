@@ -28,8 +28,8 @@ async function bootstrap() {
   });
 
   const config = new DocumentBuilder()
-    .setTitle('Api Todo List')
-    .setDescription('This api is for a todo list')
+    .setTitle('Api Lista de Tareas')
+    .setDescription('Esta API es para una lista de tareas')
     .setVersion('1.0')
     .addBearerAuth(
       {

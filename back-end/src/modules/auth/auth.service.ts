@@ -26,13 +26,13 @@ export class AuthService {
         return user;
       }
     }
-    throw new UnauthorizedException('Invalid credentials');
+    throw new UnauthorizedException('Credenciales inválidas');
   }
 
   async login(authCredentials: AuthCredentialsDto) {
     const user = await this.validateUser(authCredentials);
 
-    if (!user) throw new UnauthorizedException('Invalid credentials');
+    if (!user) throw new UnauthorizedException('Credenciales inválidas');
 
     const payLoad: JwtPayloadDto = {
       email: user[0].email,
@@ -47,7 +47,7 @@ export class AuthService {
   async register(authCredentials: UserDto) {
     const newUser = await this.userService.createUser(authCredentials);
 
-    if (!newUser) throw new UnauthorizedException('Invalid credentials');
+    if (!newUser) throw new UnauthorizedException('Credenciales inválidas');
 
     const payLoad: JwtPayloadDto = {
       email: newUser.email,
