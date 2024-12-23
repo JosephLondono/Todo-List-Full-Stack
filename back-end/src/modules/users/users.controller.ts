@@ -7,6 +7,7 @@ import {
   Param,
   Patch,
   Post,
+  Put,
   UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
@@ -108,7 +109,7 @@ export class UsersController {
     return await this.userService.deleteUserById(id);
   }
 
-  @Patch()
+  @Put()
   // @UseGuards(AuthGuard('jwt'))
   @ApiOperation({ description: 'Actualizar un usuario' })
   @ApiBody({
