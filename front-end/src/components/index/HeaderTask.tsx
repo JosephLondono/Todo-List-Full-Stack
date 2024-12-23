@@ -107,7 +107,7 @@ const HeaderTask = ({ refreshTask }: { refreshTask: () => void }) => {
         </button>
         <button
           type="button"
-          title="Refrescar tareas"
+          title="Guardar Tareas"
           onClick={() => console.log("Guardar")}
           className="flex gap-x-1 bg-green-500 text-white rounded-lg font-semibold hover:bg-opacity-90 transition-all duration-300 ease-in-out transform hover:-translate-y-1 shadow-md hover:shadow-lg disabled:opacity-50 py-1 px-2"
         >
