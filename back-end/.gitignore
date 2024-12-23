@@ -1,3 +1,9 @@
 dist
 
 *.env
+
+*.sql
+
+*.sqlite
+
+documentation
