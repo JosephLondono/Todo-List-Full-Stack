@@ -13,8 +13,10 @@ const HeaderTask = ({ refreshTask }: { refreshTask: () => void }) => {
     new Date().toISOString().split("T")[0]
   );
   const [errors, setErrors] = useState<string[]>([]);
+  const [isSummit, setIsSummit] = useState(false);
 
   const handleCreate = async () => {
+    setIsSummit(true);
     try {
       const newTask = {
         title: modalTitle,
@@ -36,6 +38,8 @@ const HeaderTask = ({ refreshTask }: { refreshTask: () => void }) => {
     } catch (error) {
       setErrors(["No se puede crear la tarea. Por favor, inténtelo de nuevo."]);
       console.error("Error al crear la tarea:", error);
+    } finally {
+      setIsSummit(false);
     }
   };
 
@@ -176,9 +180,10 @@ const HeaderTask = ({ refreshTask }: { refreshTask: () => void }) => {
         <div className="flex justify-between space-x-4">
           <button
             onClick={handleCreate}
-            className="flex-1 bg-sofka-orange text-white py-2 rounded-md hover:bg-sofka-orange/80 transition-colors"
+            className="bg-sofka-orange text-white py-2 px-1 rounded-lg font-semibold hover:bg-opacity-90 transition-all duration-300 ease-in-out transform hover:-translate-y-1 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 flex-1"
+            disabled={isSummit}
           >
-            Crear
+            {isSummit ? "Creando..." : "Crear"}
           </button>
           <button
             onClick={() => handleCloseModal(false)}
