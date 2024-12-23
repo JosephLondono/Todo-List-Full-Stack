@@ -36,7 +36,7 @@ export default function Home() {
 
   if (loading) {
     return (
-      <main className="flex-1 flex flex-col gap-3 bg-sofka-light min-h-screen">
+      <main className="flex-1 flex flex-col gap-3 bg-sofka-light min-h-[83vh]">
         <div className="max-w-7xl w-full mx-auto gap-y-4 flex-1">
           <h1 className="text-2xl font-semibold mt-2 px-7">
             Cargando tareas...
