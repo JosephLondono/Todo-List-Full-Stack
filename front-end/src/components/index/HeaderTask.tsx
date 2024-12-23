@@ -57,9 +57,9 @@ const HeaderTask = ({ refreshTask }: { refreshTask: () => void }) => {
   };
 
   return (
-    <div className="flex justify-between items-center mb-4">
+    <div className="flex justify-between items-center mb-4 flex-col md:flex-row">
       <h1 className="text-2xl font-semibold px-7">Lista de tareas</h1>
-      <div className="flex gap-2 items-center justify-center mr-4">
+      <div className="flex gap-2 items-center justify-center mr-4 flex-wrap">
         <button
           type="button"
           title="Agregar tarea"
