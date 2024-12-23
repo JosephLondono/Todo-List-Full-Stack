@@ -23,6 +23,10 @@ const TaskItem: React.FC<TaskItemProps> = ({
   const [modalDateEnd, setModalDateEnd] = useState("");
   const [errors, setErrors] = useState<string[]>([]);
 
+  const [isSubmittingUpdate, setIsSubmittingUpdate] = useState(false);
+
+  const [isSubmittinDelete, setIsSubmittinDelete] = useState(false);
+
   useEffect(() => {
     if (task) {
       setModalTitle(task.title || "");
@@ -37,6 +41,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
   };
 
   const handleUpdate = async () => {
+    setIsSubmittingUpdate(true);
     try {
       const updatedTask: Partial<TaskItemType> = {
         id: task.id,
@@ -62,10 +67,13 @@ const TaskItem: React.FC<TaskItemProps> = ({
         "No se puede actualizar la tarea. Por favor, inténtelo de nuevo.",
       ]);
       console.error("Error al actualizar la tarea:", error);
+    } finally {
+      setIsSubmittingUpdate(false);
     }
   };
 
   const handleDelete = async () => {
+    setIsSubmittinDelete(true);
     try {
       const responseDelete = await deleteTask(task.id);
 
@@ -80,6 +88,8 @@ const TaskItem: React.FC<TaskItemProps> = ({
         "No se puede eliminar la tarea. Por favor, inténtelo de nuevo.",
       ]);
       console.error("Error al eliminar la tarea:", error);
+    } finally {
+      setIsSubmittinDelete(false);
     }
   };
 
@@ -205,15 +215,17 @@ const TaskItem: React.FC<TaskItemProps> = ({
         <div className="flex justify-between space-x-4">
           <button
             onClick={handleUpdate}
-            className="flex-1 bg-sofka-orange text-white py-2 rounded-md hover:bg-sofka-orange/80 transition-colors"
+            className="bg-sofka-orange text-white py-2 px-1 rounded-lg font-semibold hover:bg-opacity-90 transition-all duration-300 ease-in-out transform hover:-translate-y-1 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 flex-1"
+            disabled={isSubmittingUpdate}
           >
-            Actualizar
+            {isSubmittingUpdate ? "Actualizando..." : "Actualizar"}
           </button>
           <button
             onClick={handleDelete}
-            className="flex-1 bg-red-500 text-white py-2 rounded-md hover:bg-red-600 transition-colors"
+            className="bg-red-500 text-white py-2 px-1 rounded-lg font-semibold hover:bg-opacity-90 transition-all duration-300 ease-in-out transform hover:-translate-y-1 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 flex-1"
+            disabled={isSubmittinDelete}
           >
-            Eliminar
+            {isSubmittinDelete ? "Eliminando..." : "Eliminar"}
           </button>
         </div>
       </Modal>
