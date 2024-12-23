@@ -11,8 +11,8 @@
     "start:backend": "cd back-end && npm run start:dev",
     "start:frontend": "cd front-end && npm run dev",
     "install:all": "npm run install:backend && npm run install:frontend",
-    "install:backend": "cd backend && npm install",
-    "install:frontend": "cd frontend && npm install"
+    "install:backend": "cd back-end && npm install",
+    "install:frontend": "cd front-end && npm install"
   },
   "keywords": [],
   "author": "",
