@@ -59,7 +59,7 @@ export function Task({
   };
 
   return (
-    <section>
+    <section className="mb-4 mt-4">
       <HeaderTask refreshTask={refreshData} />
       <div className="grid lg:grid-cols-3 min-h-[70vh] lg:gap-x-11 lg:content-stretch gap-y-4 lg:gap-y-0 max-w-[80%] mx-auto lg:max-w-[auto]">
         <div className="task-container">
