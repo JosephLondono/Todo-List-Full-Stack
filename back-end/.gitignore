@@ -5,3 +5,5 @@ dist
 *.sql
 
 *.sqlite
+
+documentation
