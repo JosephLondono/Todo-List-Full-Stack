@@ -6,6 +6,7 @@ import { JwtPayloadGetDto } from './dto/jwt-payload-get.dto';
 import { UsersService } from '../users/users.service';
 import { TaskDto } from './dto/task.dto';
 import { TaskDtoUpdate } from './dto/taskUpdate.dto';
+import { TaskDtoUpdateStatus } from './dto/taskUpdateStatus.dto';
 
 @Injectable()
 export class TaskService {
@@ -107,5 +108,39 @@ export class TaskService {
         message: 'Tarea actualizada exitosamente',
       };
     throw new ConflictException('Tarea no actualizada');
+  }
+
+  async updateStatus(req, taskUpdate: TaskDtoUpdateStatus) {
+    const payload: JwtPayloadGetDto = req.user;
+    console.log(taskUpdate);
+
+    if (
+      taskUpdate.status !== 'incomplete' &&
+      taskUpdate.status !== 'inProgress' &&
+      taskUpdate.status !== 'complete'
+    ) {
+      throw new ConflictException('Estado no válido');
+    }
+
+    const [user] = await this.userService.findUserByEmail(payload.email);
+
+    const task = await this.taskRepository.findOne({
+      where: { id: taskUpdate.id, user },
+    });
+
+    if (!task) throw new ConflictException('Tarea no encontrada');
+
+    const xd = await this.taskRepository.update(task.id, {
+      status: taskUpdate.status,
+    });
+    console.log(xd);
+
+    if (xd.affected > 0) {
+      return {
+        success: true,
+        message: 'Estado de la tarea actualizado',
+      };
+    }
+    throw new ConflictException('Estado de la tarea no actualizado');
   }
 }
