@@ -4,11 +4,15 @@ import { createTask } from "@/lib/taskManager/createTask";
 
 interface HeaderTaskProps {
   handleFreshData: () => void;
+  handleSave: () => void;
   isRefresh: boolean;
+  isSave: boolean;
 }
 const HeaderTask: React.FC<HeaderTaskProps> = ({
   handleFreshData,
+  handleSave,
   isRefresh,
+  isSave,
 }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
@@ -122,26 +126,30 @@ const HeaderTask: React.FC<HeaderTaskProps> = ({
         <button
           type="button"
           title="Guardar Tareas"
-          onClick={() => console.log("Guardar")}
-          className="flex gap-x-1 bg-green-500 text-white rounded-lg font-semibold hover:bg-opacity-90 transition-all duration-300 ease-in-out transform hover:-translate-y-1 shadow-md hover:shadow-lg disabled:opacity-50 py-1 px-2"
+          onClick={handleSave}
+          className="flex gap-x-1 bg-green-500 text-white rounded-lg font-semibold hover:bg-opacity-90 transition-all duration-300 ease-in-out transform hover:-translate-y-1 shadow-md hover:shadow-lg disabled:opacity-50 py-1 px-2 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:shadow-none"
+          disabled={isSave}
         >
-          Guardar
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-            <path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" />
-            <path d="M7 9l5 -5l5 5" />
-            <path d="M12 4l0 12" />
-          </svg>
+          {isSave ? (
+            "Guardando..."
+          ) : (
+            <>
+              Guardar
+              <svg
+                width="25"
+                height="25"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M5 12l5 5l10 -10" />
+              </svg>
+            </>
+          )}
         </button>
       </div>
       <Modal isOpen={isModalOpen} closeModal={() => handleCloseModal(false)}>
