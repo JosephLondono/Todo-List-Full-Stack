@@ -121,6 +121,19 @@ export class TaskController {
     description:
       'Actualizar el estado de una tarea para el usuario autenticado',
   })
+  @ApiBody({
+    description: 'Datos para actualizar el estado de la tarea',
+    type: TaskDtoUpdateStatus,
+    examples: {
+      example1: {
+        summary: 'Ejemplo de tarea actualizada',
+        value: {
+          id: 1,
+          status: 'complete',
+        },
+      },
+    },
+  })
   @ApiBearerAuth('jwt')
   @ApiResponse({ status: 200, description: 'Estado de la tarea actualizado' })
   @ApiResponse({ status: 401, description: 'No autorizado' })
