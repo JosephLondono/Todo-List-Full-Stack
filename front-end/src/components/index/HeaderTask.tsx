@@ -2,7 +2,18 @@ import React, { useState } from "react";
 import Modal from "../Modal";
 import { createTask } from "@/lib/taskManager/createTask";
 
-const HeaderTask = ({ refreshTask }: { refreshTask: () => void }) => {
+interface HeaderTaskProps {
+  handleFreshData: () => void;
+  handleSave: () => void;
+  isRefresh: boolean;
+  isSave: boolean;
+}
+const HeaderTask: React.FC<HeaderTaskProps> = ({
+  handleFreshData,
+  handleSave,
+  isRefresh,
+  isSave,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   const [modalDescription, setModalDescription] = useState("");
@@ -13,8 +24,10 @@ const HeaderTask = ({ refreshTask }: { refreshTask: () => void }) => {
     new Date().toISOString().split("T")[0]
   );
   const [errors, setErrors] = useState<string[]>([]);
+  const [isSummit, setIsSummit] = useState(false);
 
   const handleCreate = async () => {
+    setIsSummit(true);
     try {
       const newTask = {
         title: modalTitle,
@@ -31,11 +44,13 @@ const HeaderTask = ({ refreshTask }: { refreshTask: () => void }) => {
         }
       } else {
         handleCloseModal(false);
-        refreshTask();
+        handleFreshData();
       }
     } catch (error) {
       setErrors(["No se puede crear la tarea. Por favor, inténtelo de nuevo."]);
       console.error("Error al crear la tarea:", error);
+    } finally {
+      setIsSummit(false);
     }
   };
 
@@ -53,13 +68,19 @@ const HeaderTask = ({ refreshTask }: { refreshTask: () => void }) => {
   };
 
   return (
-    <div className="flex justify-between items-center mb-4">
-      <h1 className="text-2xl font-semibold">Lista de tareas</h1>
-      <div className="flex gap-2 items-center justify-center mr-4">
-        <button type="button" title="Agregar tarea" onClick={addTask}>
+    <div className="flex justify-between items-center mb-4 flex-col md:flex-row">
+      <h1 className="text-2xl font-semibold px-7">Lista de tareas</h1>
+      <div className="flex gap-2 items-center justify-center mr-4 flex-wrap">
+        <button
+          type="button"
+          title="Agregar tarea"
+          onClick={addTask}
+          className="flex gap-x-1 bg-sofka-orange text-white rounded-lg font-semibold hover:bg-opacity-90 transition-all duration-300 ease-in-out transform hover:-translate-y-1 shadow-md hover:shadow-lg disabled:opacity-50 py-1 px-2"
+        >
+          Agregar
           <svg
-            width="30"
-            height="30"
+            width="25"
+            height="25"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -73,21 +94,62 @@ const HeaderTask = ({ refreshTask }: { refreshTask: () => void }) => {
             <path d="M12 9v6" />
           </svg>
         </button>
-        <button type="button" title="Refrescar tareas" onClick={refreshTask}>
-          <svg
-            width="30"
-            height="30"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-            <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" />
-            <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" />
-          </svg>
+        <button
+          type="button"
+          title="Refrescar tareas"
+          onClick={handleFreshData}
+          className="flex gap-x-1 bg-blue-500 text-white rounded-lg font-semibold hover:bg-opacity-90 transition-all duration-300 ease-in-out transform hover:-translate-y-1 shadow-md hover:shadow-lg disabled:opacity-50 py-1 px-2 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:shadow-none"
+          disabled={isRefresh}
+        >
+          {isRefresh ? (
+            "Refrescando..."
+          ) : (
+            <>
+              Refrescar
+              <svg
+                width="25"
+                height="25"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" />
+                <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" />
+              </svg>
+            </>
+          )}
+        </button>
+        <button
+          type="button"
+          title="Guardar Tareas"
+          onClick={handleSave}
+          className="flex gap-x-1 bg-green-500 text-white rounded-lg font-semibold hover:bg-opacity-90 transition-all duration-300 ease-in-out transform hover:-translate-y-1 shadow-md hover:shadow-lg disabled:opacity-50 py-1 px-2 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:shadow-none"
+          disabled={isSave}
+        >
+          {isSave ? (
+            "Guardando..."
+          ) : (
+            <>
+              Guardar
+              <svg
+                width="25"
+                height="25"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M5 12l5 5l10 -10" />
+              </svg>
+            </>
+          )}
         </button>
       </div>
       <Modal isOpen={isModalOpen} closeModal={() => handleCloseModal(false)}>
@@ -176,9 +238,10 @@ const HeaderTask = ({ refreshTask }: { refreshTask: () => void }) => {
         <div className="flex justify-between space-x-4">
           <button
             onClick={handleCreate}
-            className="flex-1 bg-sofka-orange text-white py-2 rounded-md hover:bg-sofka-orange/80 transition-colors"
+            className="bg-sofka-orange text-white py-2 px-1 rounded-lg font-semibold hover:bg-opacity-90 transition-all duration-300 ease-in-out transform hover:-translate-y-1 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 flex-1"
+            disabled={isSummit}
           >
-            Crear
+            {isSummit ? "Creando..." : "Crear"}
           </button>
           <button
             onClick={() => handleCloseModal(false)}

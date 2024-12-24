@@ -22,6 +22,7 @@ import {
   ApiResponse,
   ApiBody,
 } from '@nestjs/swagger';
+import { TaskDtoUpdateStatus } from './dto/taskUpdateStatus.dto';
 
 @ApiTags('tareas')
 @Controller('/api/v1/task')
@@ -112,5 +113,20 @@ export class TaskController {
   @UseGuards(AuthGuard('jwt'))
   async updateTask(@Req() req, @Body() task: TaskDtoUpdate) {
     return await this.taskService.updateTask(req, task);
+  }
+
+  @Patch('/updateStatus')
+  @ApiOperation({
+    summary: 'Actualizar el estado de una tarea',
+    description:
+      'Actualizar el estado de una tarea para el usuario autenticado',
+  })
+  @ApiBearerAuth('jwt')
+  @ApiResponse({ status: 200, description: 'Estado de la tarea actualizado' })
+  @ApiResponse({ status: 401, description: 'No autorizado' })
+  @ApiResponse({ status: 409, description: 'Conflicto' })
+  @UseGuards(AuthGuard('jwt'))
+  async updateStatus(@Req() req, @Body() taskUpdate: TaskDtoUpdateStatus) {
+    return await this.taskService.updateStatus(req, taskUpdate);
   }
 }
