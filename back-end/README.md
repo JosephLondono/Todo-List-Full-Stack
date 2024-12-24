@@ -75,6 +75,7 @@ El backend expone las siguientes rutas bajo el prefijo `/api/v1/`:
 - **POST** `/task` - Crear una nueva tarea.
 - **DELETE** `/task/:id` - Eliminar una tarea específica.
 - **PUT** `/task` - Actualizar una tarea existente.
+- **PATCH** `/task/updateStatus` - Actualizar el estado de una tarea.
 
 ## Documentación
 
