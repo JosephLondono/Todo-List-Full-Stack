@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDragAndDrop } from "@formkit/drag-and-drop/react";
 import { TaskItemType } from "@/types/TaskItemType";
 import TaskItem from "./TaskItem";
@@ -15,6 +15,7 @@ export function Task({
   inProgressList: TaskItemType[];
   completeList: TaskItemType[];
 }) {
+  const [isRefresh, setIsRefresh] = useState(false);
   const [incompleteParent, incompleteItems, __setValuesIncomplete] =
     useDragAndDrop<HTMLUListElement, TaskItemType>(incompleteList, {
       group: "todoList",
@@ -58,9 +59,15 @@ export function Task({
     __setValuesComplete(complete);
   };
 
+  const handleFreshData = async () => {
+    setIsRefresh(true);
+    await refreshData();
+    setIsRefresh(false);
+  };
+
   return (
     <section className="mb-4 mt-4">
-      <HeaderTask refreshTask={refreshData} />
+      <HeaderTask handleFreshData={handleFreshData} isRefresh={isRefresh} />
       <div className="grid lg:grid-cols-3 min-h-[70vh] lg:gap-x-11 lg:content-stretch gap-y-4 lg:gap-y-0 max-w-[80%] mx-auto lg:max-w-[auto]">
         <div className="task-container">
           <h2 className="text-white font-medium text-lg">Tareas Incompletas</h2>

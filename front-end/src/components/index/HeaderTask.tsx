@@ -2,7 +2,14 @@ import React, { useState } from "react";
 import Modal from "../Modal";
 import { createTask } from "@/lib/taskManager/createTask";
 
-const HeaderTask = ({ refreshTask }: { refreshTask: () => void }) => {
+interface HeaderTaskProps {
+  handleFreshData: () => void;
+  isRefresh: boolean;
+}
+const HeaderTask: React.FC<HeaderTaskProps> = ({
+  handleFreshData,
+  isRefresh,
+}) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   const [modalDescription, setModalDescription] = useState("");
@@ -33,7 +40,7 @@ const HeaderTask = ({ refreshTask }: { refreshTask: () => void }) => {
         }
       } else {
         handleCloseModal(false);
-        refreshTask();
+        handleFreshData();
       }
     } catch (error) {
       setErrors(["No se puede crear la tarea. Por favor, inténtelo de nuevo."]);
@@ -86,24 +93,31 @@ const HeaderTask = ({ refreshTask }: { refreshTask: () => void }) => {
         <button
           type="button"
           title="Refrescar tareas"
-          onClick={refreshTask}
-          className="flex gap-x-1 bg-blue-500 text-white rounded-lg font-semibold hover:bg-opacity-90 transition-all duration-300 ease-in-out transform hover:-translate-y-1 shadow-md hover:shadow-lg disabled:opacity-50 py-1 px-2"
+          onClick={handleFreshData}
+          className="flex gap-x-1 bg-blue-500 text-white rounded-lg font-semibold hover:bg-opacity-90 transition-all duration-300 ease-in-out transform hover:-translate-y-1 shadow-md hover:shadow-lg disabled:opacity-50 py-1 px-2 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:shadow-none"
+          disabled={isRefresh}
         >
-          Refrescar
-          <svg
-            width="25"
-            height="25"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth={2}
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-            <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" />
-            <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" />
-          </svg>
+          {isRefresh ? (
+            "Refrescando..."
+          ) : (
+            <>
+              Refrescar
+              <svg
+                width="25"
+                height="25"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={2}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M20 11a8.1 8.1 0 0 0 -15.5 -2m-.5 -4v4h4" />
+                <path d="M4 13a8.1 8.1 0 0 0 15.5 2m.5 4v-4h-4" />
+              </svg>
+            </>
+          )}
         </button>
         <button
           type="button"
