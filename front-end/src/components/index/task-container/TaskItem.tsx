@@ -61,6 +61,10 @@ const TaskItem: React.FC<TaskItemProps> = ({
         }
       } else {
         setIsModalOpen(false);
+        toast.success("Tarea actualizada correctamente.", {
+          position: "bottom-right",
+          transition: Slide,
+        });
         refreshData();
       }
     } catch (error) {
@@ -68,6 +72,13 @@ const TaskItem: React.FC<TaskItemProps> = ({
         "No se puede actualizar la tarea. Por favor, inténtelo de nuevo.",
       ]);
       console.error("Error al actualizar la tarea:", error);
+      toast.error(
+        "No se puede actualizar la tarea. Por favor, inténtelo de nuevo.",
+        {
+          position: "bottom-right",
+          transition: Slide,
+        }
+      );
     } finally {
       setIsSubmittingUpdate(false);
     }
@@ -83,7 +94,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
       } else {
         setIsModalOpen(false);
         toast.success("Tarea eliminada correctamente.", {
-          position: "top-right",
+          position: "bottom-right",
           transition: Slide,
         });
         refreshData();
@@ -96,7 +107,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
       toast.error(
         "No se puede eliminar la tarea. Por favor, inténtelo de nuevo.",
         {
-          position: "top-right",
+          position: "bottom-right",
           transition: Slide,
         }
       );
