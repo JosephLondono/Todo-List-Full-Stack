@@ -7,6 +7,8 @@ import "@/components/index/task-container/ScrollStyles.css";
 import HeaderTask from "../HeaderTask";
 import { saveTask } from "@/lib/taskManager/saveTask";
 
+import { toast, Slide } from "react-toastify";
+
 export function Task({
   incompleteList,
   inProgressList,
@@ -68,14 +70,36 @@ export function Task({
   };
 
   const saveData = async () => {
-    const xd = await saveTask([
+    const response = await saveTask([
       ...incompleteItems,
       ...inProgressItems,
       ...completeItems,
     ]);
 
-    // Pendiente Notificaciones
-    console.log("RESULTADOO: ", xd);
+    if (response.length > 0) {
+      response.forEach((error) => {
+        toast.error(error, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          transition: Slide,
+        });
+      });
+      return;
+    }
+
+    toast.success("Tareas guardadas exitosamente", {
+      position: "bottom-right",
+      autoClose: 5000,
+      closeOnClick: false,
+      pauseOnHover: true,
+      theme: "light",
+      transition: Slide,
+    });
   };
 
   const handleSave = async () => {

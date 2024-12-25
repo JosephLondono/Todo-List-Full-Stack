@@ -33,12 +33,10 @@ export const saveTask = async (tasks: TaskItemType[]) => {
 
   results.forEach((result, index) => {
     if (result.status === "rejected") {
-      errors.push(
-        `No se puede actualizar la tarea ${tasks[index].id}. Por favor, inténtelo de nuevo.`
-      );
+      errors.push(`No se puede actualizar la tarea ${tasks[index].id}.`);
       console.error("Error al actualizar la tarea:", result.reason);
     }
   });
 
-  return results;
+  return errors;
 };
