@@ -1,16 +1,19 @@
 import React, { useState } from "react";
 import Modal from "../Modal";
 import { createTask } from "@/lib/taskManager/createTask";
+import { toast } from "react-toastify";
 
 interface HeaderTaskProps {
   handleFreshData: () => void;
   handleSave: () => void;
+  refreshData: () => void;
   isRefresh: boolean;
   isSave: boolean;
 }
 const HeaderTask: React.FC<HeaderTaskProps> = ({
   handleFreshData,
   handleSave,
+  refreshData,
   isRefresh,
   isSave,
 }) => {
@@ -44,7 +47,16 @@ const HeaderTask: React.FC<HeaderTaskProps> = ({
         }
       } else {
         handleCloseModal(false);
-        handleFreshData();
+        refreshData();
+        toast.success("Tarea creada correctamente.", {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
       }
     } catch (error) {
       setErrors(["No se puede crear la tarea. Por favor, inténtelo de nuevo."]);

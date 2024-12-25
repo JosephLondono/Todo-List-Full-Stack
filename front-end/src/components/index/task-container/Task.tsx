@@ -61,6 +61,11 @@ export function Task({
     __setValuesIncomplete(incomplete);
     __setValuesInProgress(inProgress);
     __setValuesComplete(complete);
+  };
+
+  const handleFreshData = async () => {
+    setIsRefresh(true);
+    await refreshData();
     toast.info("Tareas actualizadas", {
       position: "bottom-right",
       autoClose: 5000,
@@ -69,11 +74,6 @@ export function Task({
       theme: "light",
       transition: Slide,
     });
-  };
-
-  const handleFreshData = async () => {
-    setIsRefresh(true);
-    await refreshData();
     setIsRefresh(false);
   };
 
@@ -123,6 +123,7 @@ export function Task({
         isRefresh={isRefresh}
         isSave={isSave}
         handleSave={handleSave}
+        refreshData={refreshData}
       />
       <div className="grid lg:grid-cols-3 min-h-[70vh] lg:gap-x-11 lg:content-stretch gap-y-4 lg:gap-y-0 max-w-[80%] mx-auto lg:max-w-[auto]">
         <div className="task-container">
