@@ -61,6 +61,14 @@ export function Task({
     __setValuesIncomplete(incomplete);
     __setValuesInProgress(inProgress);
     __setValuesComplete(complete);
+    toast.info("Tareas actualizadas", {
+      position: "bottom-right",
+      autoClose: 5000,
+      closeOnClick: false,
+      pauseOnHover: true,
+      theme: "light",
+      transition: Slide,
+    });
   };
 
   const handleFreshData = async () => {
