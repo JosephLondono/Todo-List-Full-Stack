@@ -4,6 +4,7 @@ import { type TaskItemType } from "@/types/TaskItemType";
 import { deleteTask } from "@/lib/taskManager/deleteTask";
 import { updateTask } from "@/lib/taskManager/updateTask";
 import Modal from "@/components/Modal";
+import { toast } from "react-toastify";
 
 interface TaskItemProps {
   task: TaskItemType;
@@ -81,6 +82,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
         console.error(responseDelete.message);
       } else {
         setIsModalOpen(false);
+        toast.success("Tarea eliminada correctamente.");
         refreshData();
       }
     } catch (error) {
@@ -88,6 +90,9 @@ const TaskItem: React.FC<TaskItemProps> = ({
         "No se puede eliminar la tarea. Por favor, inténtelo de nuevo.",
       ]);
       console.error("Error al eliminar la tarea:", error);
+      toast.error(
+        "No se puede eliminar la tarea. Por favor, inténtelo de nuevo."
+      );
     } finally {
       setIsSubmittinDelete(false);
     }
