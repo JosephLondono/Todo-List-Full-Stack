@@ -97,9 +97,11 @@ const TaskItem: React.FC<TaskItemProps> = ({
   return (
     <>
       <div className="task-item grid lg:grid-cols-task-Item gap-x-4 bg-white shadow-sm rounded-lg xl:p-4 lg:p-2 p-2 relative">
-        <div>
+        <div className="min-w-0">
           <div className="xl:flex xl:justify-between items-center gap-2 md:gap-4 mb-2 mr-8 md:mr-3">
-            <h3 className="font-medium text-lg text-gray-900">{task.title}</h3>
+            <h3 className="font-medium text-lg text-gray-900 break-words overflow-hidden">
+              {task.title}
+            </h3>
             <span
               className={`text-xs whitespace-nowrap font-semibold ${
                 dateNow > task.dateEnd ? "text-red-500" : "text-gray-600"
@@ -108,7 +110,9 @@ const TaskItem: React.FC<TaskItemProps> = ({
               {task.dateEnd ? task.dateEnd.split("T")[0] : ""}
             </span>
           </div>
-          <p className="text-sm text-gray-700">{task.description}</p>
+          <p className="text-sm text-gray-700 break-words overflow-hidden">
+            {task.description}
+          </p>
           <div className="flex justify-center items-center cursor-grab">
             <span className="px-1 py-2 rounded-full h-8 w-8 flex justify-center items-center xl:absolute right-1 bottom-0 text-gray-700 handle-task-item">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 256">
@@ -120,7 +124,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
             </span>
           </div>
         </div>
-        <div className="flex justify-end items-center absolute right-1 top-1/2  transform -translate-y-1/2">
+        <div className="flex justify-end items-center absolute right-1 top-1/2 transform -translate-y-1/2">
           <button
             onClick={handleClick}
             className="hover:bg-gray-100 px-1 py-2 rounded-full"
