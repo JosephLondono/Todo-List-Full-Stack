@@ -5,9 +5,6 @@ export const getTask = async () => {
   const task = await fetchingData();
 
   const { complete = [], inProgress = [], incomplete = [] } = orderTask(task);
-  console.log("Complete: ", complete);
-  console.log("In Progress: ", inProgress);
-  console.log("Incomplete: ", incomplete);
 
   return { complete, inProgress, incomplete };
 };
