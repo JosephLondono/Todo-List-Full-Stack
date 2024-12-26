@@ -32,13 +32,12 @@ export class UserDto {
   email: string;
 
   @ApiProperty({
-    name: 'password',
+    name: 'name',
     type: String,
-    description: 'Contraseña del usuario',
+    description: 'Nombre del usuario',
     required: true,
   })
-  @IsNotEmpty({ message: 'La contraseña es obligatoria' })
-  @IsString({ message: 'La contraseña debe ser una cadena de texto' })
-  @MinLength(4, { message: 'La contraseña debe tener al menos 4 caracteres' })
-  password: string;
+  @IsNotEmpty({ message: 'El nombre es obligatorio' })
+  @IsString({ message: 'El nombre debe ser un texto' })
+  name: string;
 }

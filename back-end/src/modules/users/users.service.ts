@@ -18,16 +18,14 @@ export class UsersService {
     const userFormatted = formattedUser(user);
     const userExistEmail = await this.findUserByEmail(userFormatted.email);
 
-    if (userExistEmail.length !== 0)
+    if (userExistEmail)
       throw new ConflictException(
         'El usuario con el email proporcionado ya existe',
       );
 
-    const userWithPasswordEncrypted = await encryptPassword(userFormatted);
-    const newUser = this.UsersRepository.create(userWithPasswordEncrypted);
+    const newUser = this.UsersRepository.create(userFormatted);
     const userSaved = await this.UsersRepository.save(newUser);
-    const userWithoutPassword = formattedUsersWhitoutPassword(userSaved);
-    return userWithoutPassword;
+    return userSaved;
   }
 
   async findUserByEmail(email: string) {
@@ -39,7 +37,9 @@ export class UsersService {
         'El usuario con el email proporcionado no existe',
       );
 
-    return user;
+    return {
+      message: 'Usuario registrado',
+    };
   }
 
   async getUsers() {
@@ -81,7 +81,7 @@ export class UsersService {
 
     const userFormatted = formattedUser(user);
 
-    if (!userFormatted.email && !userFormatted.password) {
+    if (!userFormatted.email) {
       throw new ConflictException(
         'Debe proporcionar al menos un campo para actualizar',
       );
@@ -96,16 +96,10 @@ export class UsersService {
       if (user.email !== userExist.email) {
         const emailExist = await this.findUserByEmail(user.email);
 
-        if (emailExist.length !== 0)
-          throw new ConflictException('El email ya existe');
+        if (emailExist) throw new ConflictException('El email ya existe');
 
         userUpdate.email = user.email;
       }
-    }
-
-    if (user.password) {
-      const userWithPasswordEncrypted = await encryptPassword(user);
-      userUpdate.password = userWithPasswordEncrypted.password;
     }
 
     const userUpdated = await this.UsersRepository.update(user.id, userUpdate);
@@ -115,26 +109,12 @@ export class UsersService {
 
     return {
       message: 'El usuario ha sido actualizado exitosamente',
-      newDataUser: formattedUsersWhitoutPassword(userUpdate),
+      newDataUser: userUpdate,
     };
   }
 }
 
-async function encryptPassword(user: UserDto | UserDeleteDto) {
-  const passwordSalt = await bcrypt.genSalt(10);
-  const passwordHash = await bcrypt.hash(user.password, passwordSalt);
-  user.password = passwordHash;
-  return user;
-}
-
 function formattedUser(user: UserDeleteDto | UserDto) {
   if (user.email) user.email = user.email.trim().toLowerCase() || null;
-  if (user.password) user.password = user.password.trim() || null;
-
   return user;
-}
-
-function formattedUsersWhitoutPassword(user: UsersEntity) {
-  const { password, ...userWithoutPassword } = user;
-  return userWithoutPassword;
 }
