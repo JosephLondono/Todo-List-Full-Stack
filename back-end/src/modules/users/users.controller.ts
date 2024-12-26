@@ -39,7 +39,6 @@ export class UsersController {
         value: {
           name: 'John Doe',
           email: 'johnDoe@gmail.com',
-          password: '1234',
         },
       },
     },

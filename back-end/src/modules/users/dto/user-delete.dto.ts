@@ -27,14 +27,4 @@ export class UserDeleteDto {
   @IsEmail()
   @IsOptional()
   email?: string;
-
-  @ApiProperty({
-    name: 'password',
-    type: String,
-    description: 'Contraseña del usuario',
-    required: false,
-  })
-  @IsString()
-  @IsOptional()
-  password?: string;
 }

@@ -25,7 +25,9 @@ export class UsersService {
 
     const newUser = this.UsersRepository.create(userFormatted);
     const userSaved = await this.UsersRepository.save(newUser);
-    return userSaved;
+    return {
+      message: 'Usuario creado exitosamente',
+    };
   }
 
   async findUserByEmail(email: string) {
@@ -37,9 +39,7 @@ export class UsersService {
         'El usuario con el email proporcionado no existe',
       );
 
-    return {
-      message: 'Usuario registrado',
-    };
+    return user;
   }
 
   async getUsers() {

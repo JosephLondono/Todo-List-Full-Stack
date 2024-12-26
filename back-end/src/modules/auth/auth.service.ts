@@ -13,49 +13,49 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async validateUser(userCredentials: AuthCredentialsDto) {
-    const user = await this.userService.findUserByEmail(userCredentials.email);
+  // async validateUser(userCredentials: AuthCredentialsDto) {
+  //   const user = await this.userService.findUserByEmail(userCredentials.email);
 
-    if (user.length > 0) {
-      const passwordOk = await bcrypt.compare(
-        userCredentials.password,
-        user[0].password,
-      );
+  //   if (user.length > 0) {
+  //     const passwordOk = await bcrypt.compare(
+  //       userCredentials.password,
+  //       user[0].password,
+  //     );
 
-      if (passwordOk) {
-        return user;
-      }
-    }
-    throw new UnauthorizedException('Credenciales inválidas');
-  }
+  //     if (passwordOk) {
+  //       return user;
+  //     }
+  //   }
+  //   throw new UnauthorizedException('Credenciales inválidas');
+  // }
 
-  async login(authCredentials: AuthCredentialsDto) {
-    const user = await this.validateUser(authCredentials);
+  // async login(authCredentials: AuthCredentialsDto) {
+  //   const user = await this.validateUser(authCredentials);
 
-    if (!user) throw new UnauthorizedException('Credenciales inválidas');
+  //   if (!user) throw new UnauthorizedException('Credenciales inválidas');
 
-    const payLoad: JwtPayloadDto = {
-      email: user[0].email,
-      id: user[0].id,
-    };
+  //   const payLoad: JwtPayloadDto = {
+  //     email: user[0].email,
+  //     id: user[0].id,
+  //   };
 
-    return {
-      accesToken: this.jwtService.sign(payLoad),
-    };
-  }
+  //   return {
+  //     accesToken: this.jwtService.sign(payLoad),
+  //   };
+  // }
 
-  async register(authCredentials: UserDto) {
-    const newUser = await this.userService.createUser(authCredentials);
+  // async register(authCredentials: UserDto) {
+  //   const newUser = await this.userService.createUser(authCredentials);
 
-    if (!newUser) throw new UnauthorizedException('Credenciales inválidas');
+  //   if (!newUser) throw new UnauthorizedException('Credenciales inválidas');
 
-    const payLoad: JwtPayloadDto = {
-      email: newUser.email,
-      id: newUser.id,
-    };
+  //   const payLoad: JwtPayloadDto = {
+  //     email: newUser.email,
+  //     id: newUser.id,
+  //   };
 
-    return {
-      accesToken: this.jwtService.sign(payLoad),
-    };
-  }
+  //   return {
+  //     accesToken: this.jwtService.sign(payLoad),
+  //   };
+  // }
 }

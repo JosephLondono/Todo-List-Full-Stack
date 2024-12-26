@@ -14,73 +14,73 @@ import { UserDto } from '../users/dto/user.dto';
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @Post()
-  @ApiOperation({
-    description: 'Permitir iniciar sesión',
-  })
-  @ApiBody({
-    description: 'Permitir al usuario iniciar sesión',
-    type: AuthCredentialsDto,
-    examples: {
-      example1: {
-        value: {
-          email: 'example@email.com',
-          password: 'password',
-        },
-      },
-    },
-  })
-  @ApiResponse({
-    status: 201,
-    description: 'Usuario ha iniciado sesión',
-  })
-  @ApiResponse({
-    status: 401,
-    description: 'No autorizado',
-  })
-  login(@Body() authCredentials: AuthCredentialsDto) {
-    return this.authService.login(authCredentials);
-  }
+  // @Post()
+  // @ApiOperation({
+  //   description: 'Permitir iniciar sesión',
+  // })
+  // @ApiBody({
+  //   description: 'Permitir al usuario iniciar sesión',
+  //   type: AuthCredentialsDto,
+  //   examples: {
+  //     example1: {
+  //       value: {
+  //         email: 'example@email.com',
+  //         password: 'password',
+  //       },
+  //     },
+  //   },
+  // })
+  // @ApiResponse({
+  //   status: 201,
+  //   description: 'Usuario ha iniciado sesión',
+  // })
+  // @ApiResponse({
+  //   status: 401,
+  //   description: 'No autorizado',
+  // })
+  // login(@Body() authCredentials: AuthCredentialsDto) {
+  //   return this.authService.login(authCredentials);
+  // }
 
-  @Get('data-user')
-  @UseGuards(AuthGuard('jwt'))
-  @ApiOperation({
-    description: 'Permitir obtener datos del usuario',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Datos del usuario',
-  })
-  @ApiResponse({
-    status: 401,
-    description: 'No autorizado',
-  })
-  @ApiBearerAuth('jwt')
-  dataUser(@Req() request) {
-    return request.user;
-  }
+  // @Get('data-user')
+  // @UseGuards(AuthGuard('jwt'))
+  // @ApiOperation({
+  //   description: 'Permitir obtener datos del usuario',
+  // })
+  // @ApiResponse({
+  //   status: 200,
+  //   description: 'Datos del usuario',
+  // })
+  // @ApiResponse({
+  //   status: 401,
+  //   description: 'No autorizado',
+  // })
+  // @ApiBearerAuth('jwt')
+  // dataUser(@Req() request) {
+  //   return request.user;
+  // }
 
-  @Post('register')
-  @ApiOperation({
-    description: 'Permitir registrarse',
-  })
-  @ApiBody({
-    description: 'Permitir al usuario registrarse',
-    type: AuthCredentialsDto,
-    examples: {
-      example1: {
-        value: {
-          email: 'example@email.com',
-          password: 'password',
-        },
-      },
-    },
-  })
-  @ApiResponse({
-    status: 201,
-    description: 'Usuario registrado',
-  })
-  register(@Body() authCredentials: UserDto) {
-    return this.authService.register(authCredentials);
-  }
+  // @Post('register')
+  // @ApiOperation({
+  //   description: 'Permitir registrarse',
+  // })
+  // @ApiBody({
+  //   description: 'Permitir al usuario registrarse',
+  //   type: AuthCredentialsDto,
+  //   examples: {
+  //     example1: {
+  //       value: {
+  //         email: 'example@email.com',
+  //         password: 'password',
+  //       },
+  //     },
+  //   },
+  // })
+  // @ApiResponse({
+  //   status: 201,
+  //   description: 'Usuario registrado',
+  // })
+  // register(@Body() authCredentials: UserDto) {
+  //   return this.authService.register(authCredentials);
+  // }
 }
