@@ -7,8 +7,6 @@ export async function middleware(req: NextRequest) {
   const token = await getToken({ req });
   const { pathname } = req.nextUrl;
 
-  console.log("middleware", { token, pathname });
-
   if (!token) {
     return NextResponse.redirect(new URL("/auth"));
   }
