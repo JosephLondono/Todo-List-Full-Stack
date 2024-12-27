@@ -1,20 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getToken } from "next-auth/jwt";
 
-const protectedRoutes = ["/task", "/settings"];
+const protectedRoutes = ["/tasks", "/settings"];
 
 export async function middleware(req: NextRequest) {
   const token = await getToken({ req });
   const { pathname } = req.nextUrl;
 
-  if (!token) {
-    return NextResponse.redirect(new URL("/auth"));
+  console.log("middleware", { token, pathname });
+
+  if (!token && protectedRoutes.includes(pathname)) {
+    return NextResponse.redirect(new URL("/auth", req.nextUrl.origin));
   }
 
-  if (protectedRoutes.includes(pathname)) {
-    console.log("middleware", "redirecting to /auth");
-
-    return NextResponse.redirect(new URL("/auth", req.nextUrl.origin));
+  if (token && pathname === "/auth") {
+    return NextResponse.redirect(new URL("/tasks", req.nextUrl.origin));
   }
 
   return NextResponse.next();
