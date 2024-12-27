@@ -7,8 +7,6 @@ export async function middleware(req: NextRequest) {
   const token = await getToken({ req });
   const { pathname } = req.nextUrl;
 
-  console.log("middleware", { token, pathname });
-
   if (!token && protectedRoutes.includes(pathname)) {
     return NextResponse.redirect(new URL("/auth", req.nextUrl.origin));
   }
