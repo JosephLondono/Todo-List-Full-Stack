@@ -18,7 +18,7 @@ export class UsersService {
     const userFormatted = formattedUser(user);
     const userExistEmail = await this.findUserByEmail(userFormatted.email);
 
-    if (userExistEmail)
+    if (userExistEmail.length > 0)
       throw new ConflictException(
         'El usuario con el email proporcionado ya existe',
       );
