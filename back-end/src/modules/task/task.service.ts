@@ -8,6 +8,16 @@ import { TaskDto } from './dto/task.dto';
 import { TaskDtoUpdate } from './dto/taskUpdate.dto';
 import { TaskDtoUpdateStatus } from './dto/taskUpdateStatus.dto';
 
+interface UserGoogle {
+  id: string;
+  email: string;
+  verified_email: boolean;
+  name: string;
+  given_name: string;
+  family_name: string;
+  picture: string;
+}
+
 @Injectable()
 export class TaskService {
   constructor(
@@ -17,9 +27,15 @@ export class TaskService {
   ) {}
 
   async getTasks(req) {
-    const payload: JwtPayloadGetDto = req.user;
+    const userGoogle: UserGoogle = await getUserGoogle(
+      req.headers.authorization,
+    );
 
-    const [user] = await this.userService.findUserByEmail(payload.email);
+    if (!userGoogle) {
+      throw new ConflictException('Usuario no encontrado');
+    }
+
+    const [user] = await this.userService.findUserByEmail(userGoogle.email);
 
     const taskUser = await this.taskRepository.find({
       select: ['id', 'title', 'description', 'status', 'dateEnd'],
@@ -34,9 +50,15 @@ export class TaskService {
   }
 
   async createTask(req, task: TaskDto) {
-    const payload: JwtPayloadGetDto = req.user;
+    const userGoogle: UserGoogle = await getUserGoogle(
+      req.headers.authorization,
+    );
 
-    const [user] = await this.userService.findUserByEmail(payload.email);
+    if (!userGoogle) {
+      throw new ConflictException('Usuario no encontrado');
+    }
+
+    const [user] = await this.userService.findUserByEmail(userGoogle.email);
 
     if (!user) throw new ConflictException('Usuario no encontrado');
 
@@ -55,9 +77,15 @@ export class TaskService {
   }
 
   async deleteTask(req, id: number) {
-    const payload: JwtPayloadGetDto = req.user;
+    const userGoogle: UserGoogle = await getUserGoogle(
+      req.headers.authorization,
+    );
 
-    const [user] = await this.userService.findUserByEmail(payload.email);
+    if (!userGoogle) {
+      throw new ConflictException('Usuario no encontrado');
+    }
+
+    const [user] = await this.userService.findUserByEmail(userGoogle.email);
 
     const task = await this.taskRepository.findOne({
       where: { id, user },
@@ -75,7 +103,13 @@ export class TaskService {
   }
 
   async updateTask(req, task: TaskDtoUpdate) {
-    const payload: JwtPayloadGetDto = req.user;
+    const userGoogle: UserGoogle = await getUserGoogle(
+      req.headers.authorization,
+    );
+
+    if (!userGoogle) {
+      throw new ConflictException('Usuario no encontrado');
+    }
 
     if (
       task.status !== 'incomplete' &&
@@ -85,7 +119,7 @@ export class TaskService {
       throw new ConflictException('Estado no válido');
     }
 
-    const [user] = await this.userService.findUserByEmail(payload.email);
+    const [user] = await this.userService.findUserByEmail(userGoogle.email);
 
     const taskUpdate = await this.taskRepository.findOne({
       where: { id: task.id, user },
@@ -111,9 +145,13 @@ export class TaskService {
   }
 
   async updateStatus(req, taskUpdate: TaskDtoUpdateStatus) {
-    const payload: JwtPayloadGetDto = req.user;
-    console.log(taskUpdate);
+    const userGoogle: UserGoogle = await getUserGoogle(
+      req.headers.authorization,
+    );
 
+    if (!userGoogle) {
+      throw new ConflictException('Usuario no encontrado');
+    }
     if (
       taskUpdate.status !== 'incomplete' &&
       taskUpdate.status !== 'inProgress' &&
@@ -122,7 +160,7 @@ export class TaskService {
       throw new ConflictException('Estado no válido');
     }
 
-    const [user] = await this.userService.findUserByEmail(payload.email);
+    const [user] = await this.userService.findUserByEmail(userGoogle.email);
 
     const task = await this.taskRepository.findOne({
       where: { id: taskUpdate.id, user },
@@ -133,7 +171,6 @@ export class TaskService {
     const xd = await this.taskRepository.update(task.id, {
       status: taskUpdate.status,
     });
-    console.log(xd);
 
     if (xd.affected > 0) {
       return {
@@ -144,3 +181,19 @@ export class TaskService {
     throw new ConflictException('Estado de la tarea no actualizado');
   }
 }
+
+const getUserGoogle = async (acessToken: string) => {
+  const url = 'https://www.googleapis.com/oauth2/v1/userinfo?alt=json';
+  const response = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${acessToken}`,
+    },
+  });
+
+  const data = await response.json();
+
+  if (data.error) {
+    return null;
+  }
+  return data;
+};

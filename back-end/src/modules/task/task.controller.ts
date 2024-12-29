@@ -37,7 +37,7 @@ export class TaskController {
   @ApiBearerAuth('jwt')
   @ApiResponse({ status: 200, description: 'Tareas recuperadas exitosamente' })
   @ApiResponse({ status: 401, description: 'No autorizado' })
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   async getTasks(@Req() req) {
     return await this.taskService.getTasks(req);
   }
@@ -66,7 +66,7 @@ export class TaskController {
       },
     },
   })
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   async createTask(@Req() req, @Body() task: TaskDto) {
     return await this.taskService.createTask(req, task);
   }
@@ -80,7 +80,7 @@ export class TaskController {
   @ApiResponse({ status: 200, description: 'Tarea eliminada exitosamente' })
   @ApiResponse({ status: 401, description: 'No autorizado' })
   @ApiResponse({ status: 409, description: 'Conflicto' })
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   async deleteTask(@Req() req, @Param('id', ParseIntPipe) id: number) {
     return await this.taskService.deleteTask(req, id);
   }
@@ -110,7 +110,7 @@ export class TaskController {
       },
     },
   })
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   async updateTask(@Req() req, @Body() task: TaskDtoUpdate) {
     return await this.taskService.updateTask(req, task);
   }
@@ -138,7 +138,7 @@ export class TaskController {
   @ApiResponse({ status: 200, description: 'Estado de la tarea actualizado' })
   @ApiResponse({ status: 401, description: 'No autorizado' })
   @ApiResponse({ status: 409, description: 'Conflicto' })
-  @UseGuards(AuthGuard('jwt'))
+  // @UseGuards(AuthGuard('jwt'))
   async updateStatus(@Req() req, @Body() taskUpdate: TaskDtoUpdateStatus) {
     return await this.taskService.updateStatus(req, taskUpdate);
   }
