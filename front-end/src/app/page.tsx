@@ -4,8 +4,7 @@ import { getTask } from "@/lib/taskManager/getTask";
 import { TaskItemType } from "@/types/TaskItemType";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import "@/app/spinnerLoader.css";
-import { getCookie } from "cookies-next/client";
+import { getCookie } from "cookies-next";
 
 export default function Home() {
   const [completeList, setCompleteList] = useState<TaskItemType[]>([]);

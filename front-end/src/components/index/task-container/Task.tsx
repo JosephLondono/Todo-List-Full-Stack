@@ -8,6 +8,7 @@ import HeaderTask from "../HeaderTask";
 import { saveTask } from "@/lib/taskManager/saveTask";
 
 import { toast, Slide } from "react-toastify";
+import { useSessionContext } from "@/context/sessionContext";
 
 export function Task({
   incompleteList,
@@ -18,6 +19,7 @@ export function Task({
   inProgressList: TaskItemType[];
   completeList: TaskItemType[];
 }) {
+  const sessionContext = useSessionContext();
   const [isRefresh, setIsRefresh] = useState(false);
   const [isSave, setIsSave] = useState(false);
   const [incompleteParent, incompleteItems, __setValuesIncomplete] =
@@ -57,7 +59,12 @@ export function Task({
   }, [completeItems]);
 
   const refreshData = async () => {
-    const { incomplete, inProgress, complete } = await getTask();
+    if (!sessionContext.session?.accessToken) {
+      throw new Error("Access token is undefined");
+    }
+    const { incomplete, inProgress, complete } = await getTask(
+      sessionContext.session
+    );
     __setValuesIncomplete(incomplete);
     __setValuesInProgress(inProgress);
     __setValuesComplete(complete);
@@ -78,11 +85,13 @@ export function Task({
   };
 
   const saveData = async () => {
-    const response = await saveTask([
-      ...incompleteItems,
-      ...inProgressItems,
-      ...completeItems,
-    ]);
+    if (!sessionContext.session?.accessToken) {
+      throw new Error("EL token es requerido");
+    }
+    const response = await saveTask(
+      [...incompleteItems, ...inProgressItems, ...completeItems],
+      sessionContext.session?.accessToken
+    );
 
     if (response.length > 0) {
       response.forEach((error) => {

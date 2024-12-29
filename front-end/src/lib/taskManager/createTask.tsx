@@ -1,8 +1,9 @@
-import { getCookie } from "cookies-next";
 import { TaskItemType } from "@/types/TaskItemType";
 
-export const createTask = async (task: Partial<TaskItemType>) => {
-  const token = getCookie("accesToken");
+export const createTask = async (
+  task: Partial<TaskItemType>,
+  accessToken: string
+) => {
   try {
     const res = await fetch(
       `${
@@ -14,7 +15,7 @@ export const createTask = async (task: Partial<TaskItemType>) => {
         headers: {
           "Access-Control-Allow-Origin": "true",
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `${accessToken}`,
         },
         body: JSON.stringify(task),
       }

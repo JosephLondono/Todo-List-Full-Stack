@@ -1,9 +1,7 @@
-import { getCookie } from "cookies-next";
 import { TaskItemType } from "@/types/TaskItemType";
 
-export const saveTask = async (tasks: TaskItemType[]) => {
+export const saveTask = async (tasks: TaskItemType[], accessToken: string) => {
   const errors: string[] = [];
-  const token = getCookie("accesToken");
 
   const results = await Promise.allSettled(
     tasks.map(async (task) => {
@@ -16,7 +14,7 @@ export const saveTask = async (tasks: TaskItemType[]) => {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            Authorization: `${accessToken}`,
           },
           body: JSON.stringify({ id: task.id, status: task.status }),
         }

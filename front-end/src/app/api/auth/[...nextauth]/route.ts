@@ -1,6 +1,12 @@
 import NextAuth from "next-auth";
 import GooglePrivder from "next-auth/providers/google";
 
+declare module "next-auth" {
+  interface Session {
+    accessToken?: string;
+  }
+}
+
 const handle = NextAuth({
   providers: [
     GooglePrivder({
@@ -8,6 +14,25 @@ const handle = NextAuth({
       clientSecret: process.env.AUTH_GOOGLE_SECRET as string,
     }),
   ],
+  callbacks: {
+    async jwt({ token, account, profile }) {
+      // Persist the OAuth access_token and or the user id to the token right after signin
+      if (account) {
+        token.accessToken = account.access_token;
+        token.email = profile?.email;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      // Send properties to the client, like an access_token and user id from a provider.
+      session.accessToken = token.accessToken as string;
+      if (session.user) {
+        session.user.email = token.email;
+      }
+
+      return session;
+    },
+  },
   events: {
     signIn: async (message) => {
       try {

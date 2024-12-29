@@ -1,7 +1,4 @@
-import { getCookie } from "cookies-next";
-
-export const deleteTask = async (id: number) => {
-  const token = getCookie("accesToken");
+export const deleteTask = async (id: number, accessToken: string) => {
   try {
     const res = await fetch(
       `${
@@ -11,7 +8,7 @@ export const deleteTask = async (id: number) => {
       {
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `${accessToken}`,
         },
       }
     );

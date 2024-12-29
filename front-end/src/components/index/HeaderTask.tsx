@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Modal from "../Modal";
 import { createTask } from "@/lib/taskManager/createTask";
 import { toast } from "react-toastify";
+import { useSessionContext } from "@/context/sessionContext";
 
 interface HeaderTaskProps {
   handleFreshData: () => void;
@@ -17,6 +18,7 @@ const HeaderTask: React.FC<HeaderTaskProps> = ({
   isRefresh,
   isSave,
 }) => {
+  const sessionContext = useSessionContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   const [modalDescription, setModalDescription] = useState("");
@@ -38,7 +40,17 @@ const HeaderTask: React.FC<HeaderTaskProps> = ({
         status: modalStatus,
         dateEnd: modalDateEnd,
       };
-      const responseCreate = await createTask(newTask);
+      if (!sessionContext.session?.accessToken) {
+        setErrors([
+          "No se puede crear la tarea. Token de acceso no disponible.",
+        ]);
+        setIsSummit(false);
+        return;
+      }
+      const responseCreate = await createTask(
+        newTask,
+        sessionContext.session?.accessToken
+      );
       if (responseCreate.error) {
         if (Array.isArray(responseCreate.message)) {
           setErrors(responseCreate.message);

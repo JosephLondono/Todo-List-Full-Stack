@@ -1,16 +1,16 @@
 import { TaskItemType } from "@/types/TaskItemType";
-import { getCookie } from "cookies-next/client";
+import { Session } from "next-auth";
+import { toast } from "react-toastify";
 
-export const getTask = async () => {
-  const task = await fetchingData();
+export const getTask = async (session: Session) => {
+  const task = await fetchingData(session);
 
   const { complete = [], inProgress = [], incomplete = [] } = orderTask(task);
 
   return { complete, inProgress, incomplete };
 };
 
-const fetchingData = async () => {
-  const token = getCookie("accesToken");
+const fetchingData = async (session: Session) => {
   try {
     const res = await fetch(
       `${
@@ -18,8 +18,10 @@ const fetchingData = async () => {
         process.env.NEXT_PUBLIC_URL_DEV_BACKEND
       }/api/v1/task`,
       {
+        method: "GET",
         headers: {
-          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+          Authorization: `${session.accessToken}`,
         },
       }
     );
@@ -27,6 +29,15 @@ const fetchingData = async () => {
 
     return tasks;
   } catch (error) {
+    toast.error("Error al obtener las tareas", {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
     console.error(error);
     return [];
   }

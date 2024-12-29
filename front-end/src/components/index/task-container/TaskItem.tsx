@@ -5,6 +5,7 @@ import { deleteTask } from "@/lib/taskManager/deleteTask";
 import { updateTask } from "@/lib/taskManager/updateTask";
 import Modal from "@/components/Modal";
 import { Slide, toast } from "react-toastify";
+import { useSessionContext } from "@/context/sessionContext";
 
 interface TaskItemProps {
   task: TaskItemType;
@@ -15,6 +16,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
   task,
   refreshData: refreshData,
 }) => {
+  const sessionContext = useSessionContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   const [modalDescription, setModalDescription] = useState("");
@@ -51,7 +53,19 @@ const TaskItem: React.FC<TaskItemProps> = ({
         status: modalStatus,
         dateEnd: modalDateEnd,
       };
-      const responseUpdate = await updateTask(updatedTask);
+
+      if (!sessionContext.session?.accessToken) {
+        setErrors([
+          "No se puede actualizar la tarea. Token de acceso no disponible.",
+        ]);
+        setIsSubmittingUpdate(false);
+        return;
+      }
+
+      const responseUpdate = await updateTask(
+        updatedTask,
+        sessionContext.session?.accessToken
+      );
 
       if (responseUpdate.error) {
         if (Array.isArray(responseUpdate.message)) {
@@ -87,7 +101,17 @@ const TaskItem: React.FC<TaskItemProps> = ({
   const handleDelete = async () => {
     setIsSubmittinDelete(true);
     try {
-      const responseDelete = await deleteTask(task.id);
+      if (!sessionContext.session?.accessToken) {
+        setErrors([
+          "No se puede eliminar la tarea. Token de acceso no disponible.",
+        ]);
+        setIsSubmittinDelete(false);
+        return;
+      }
+      const responseDelete = await deleteTask(
+        task.id,
+        sessionContext.session.accessToken
+      );
 
       if (responseDelete.error) {
         console.error(responseDelete.message);
