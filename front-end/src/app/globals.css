@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .task-container {
+    @apply bg-black w-full rounded-2xl py-4 px-6 flex flex-col gap-y-3;
+  }
+  .task-item {
+    @apply bg-white w-full rounded-lg py-2;
+  }
+}
+
 /* Custom Scrollbar Styles */
 ::-webkit-scrollbar {
   width: 10px;
