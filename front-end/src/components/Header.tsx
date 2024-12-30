@@ -2,6 +2,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import ButtonAuth from "./ButtonAuth";
+import { ThemeSwitcher } from "./Theme-provider";
 
 const Header = () => {
   return (
@@ -17,6 +18,7 @@ const Header = () => {
             style={{ width: "auto", height: "auto" }}
           />
         </Link>
+        <ThemeSwitcher />
         <nav>
           <ul className="flex space-x-12 items-center">
             <li>
