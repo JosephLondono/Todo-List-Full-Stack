@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { ThemeProvider as NextThemesProvider, useTheme } from "next-themes";
+import { Moon, Sun } from "lucide-react";
 
 export function ThemeProvider({
   children,
@@ -14,7 +15,7 @@ export function ThemeProvider({
   }, []);
 
   if (!mounted) {
-    return <div className="invisible">{children}</div>;
+    return <>{children}</>;
   }
 
   return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
@@ -33,8 +34,16 @@ export const ThemeSwitcher = () => {
   }
 
   return (
-    <button onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
-      {theme}
+    <button
+      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+      className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+      aria-label="Toggle theme"
+    >
+      {theme === "dark" ? (
+        <Sun className="h-5 w-5 text-yellow-500" />
+      ) : (
+        <Moon className="h-5 w-5 text-gray-700" />
+      )}
     </button>
   );
 };

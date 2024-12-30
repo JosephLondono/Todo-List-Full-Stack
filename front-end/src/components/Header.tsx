@@ -3,14 +3,19 @@ import Image from "next/image";
 import Link from "next/link";
 import ButtonAuth from "./ButtonAuth";
 import { ThemeSwitcher } from "./Theme-provider";
+import { useTheme } from "next-themes";
 
 const Header = () => {
+  const { theme } = useTheme();
+
   return (
-    <header className="w-full bg-white flex justify-center items-center h-14">
+    <header className="w-full bg-white dark:bg-gray-800 flex justify-center items-center h-14 shadow-md text-black dark:text-white">
       <div className="max-w-7xl flex justify-between items-center px-14 w-full">
         <Link href="/">
           <Image
-            src="/LogoSofka.png"
+            src={
+              theme === "dark" ? "/LogoSofkaDark.png" : "/LogoSofkaLight.png"
+            }
             alt="Sofka Technologies"
             width={120}
             height={40}

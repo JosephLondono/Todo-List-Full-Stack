@@ -23,20 +23,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es">
+    <html lang="es" suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col bg-sofka-light`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-screen flex flex-col bg-sofka-light dark:bg-gray-900`}
       >
         <ThemeProvider
-          attribute={"class"}
-          defaultTheme="system"
-          enableSystem
+          attribute="class"
+          defaultTheme="light"
+          enableSystem={false}
           disableTransitionOnChange
         >
           <SessionProvider>
-            <Header />
-            {children}
-            <Footer />
+            <div className="flex flex-col min-h-screen">
+              <Header />
+              {children}
+              <Footer />
+            </div>
           </SessionProvider>
           <ToastContainer />
         </ThemeProvider>
