@@ -37,4 +37,9 @@ export class TaskEntity {
     createForeignKeyConstraints: true,
   })
   user: UsersEntity;
+
+  @Column({
+    type: 'varchar',
+  })
+  style: string;
 }

@@ -12,10 +12,67 @@ interface TaskItemProps {
   refreshData: () => void;
 }
 
-const TaskItem: React.FC<TaskItemProps> = ({
-  task,
-  refreshData: refreshData,
-}) => {
+const STYLE_TASK_ITEM = {
+  default: {
+    backgroundColor: "bg-white dark:bg-white",
+    colorTextDate: {
+      color: "text-gray-900",
+      colorRed: "text-red-700 dark:text-red-700",
+    },
+  },
+  red: {
+    backgroundColor: "bg-red-200 dark:bg-red-200",
+    colorTextDate: {
+      color: "text-gray-900",
+      colorRed: "text-red-700 dark:text-red-700",
+    },
+  },
+  green: {
+    backgroundColor: "bg-green-200 dark:bg-green-200",
+    colorTextDate: {
+      color: "text-gray-900",
+      colorRed: "text-red-700 dark:text-red-700",
+    },
+  },
+  blue: {
+    backgroundColor: "bg-blue-200 dark:bg-blue-200",
+    colorTextDate: {
+      color: "text-gray-900",
+      colorRed: "text-red-700 dark:text-red-700",
+    },
+  },
+  yellow: {
+    backgroundColor: "bg-yellow-200 dark:bg-yellow-200",
+    colorTextDate: {
+      color: "text-gray-900",
+      colorRed: "text-red-700 dark:text-red-700",
+    },
+  },
+  orange: {
+    backgroundColor: "bg-orange-200 dark:bg-orange-200",
+    colorTextDate: {
+      color: "text-gray-900",
+      colorRed: "text-red-700 dark:text-red-700",
+    },
+  },
+  purple: {
+    backgroundColor: "bg-purple-300 dark:bg-purple-300",
+    colorTextDate: {
+      color: "text-gray-900",
+      colorRed: "text-red-700 dark:text-red-700",
+    },
+  },
+  pink: {
+    backgroundColor: "bg-pink-200 dark:bg-pink-200",
+    colorTextDate: {
+      color: "text-gray-900",
+      colorRed: "text-red-700 dark:text-red-700",
+    },
+  },
+};
+
+const TaskItem: React.FC<TaskItemProps> = ({ task, refreshData }) => {
+  const style = task.style || "default";
   const sessionContext = useSessionContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
@@ -23,11 +80,12 @@ const TaskItem: React.FC<TaskItemProps> = ({
   const [modalStatus, setModalStatus] = useState<
     "incomplete" | "inProgress" | "complete"
   >("incomplete");
+  const [styleModal, setStyleModal] = useState<
+    "default" | "blue" | "yellow" | "orange" | "purple" | "pink"
+  >("default");
   const [modalDateEnd, setModalDateEnd] = useState("");
   const [errors, setErrors] = useState<string[]>([]);
-
   const [isSubmittingUpdate, setIsSubmittingUpdate] = useState(false);
-
   const [isSubmittinDelete, setIsSubmittinDelete] = useState(false);
 
   useEffect(() => {
@@ -39,9 +97,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
     }
   }, [task]);
 
-  const handleClick = () => {
-    setIsModalOpen(true);
-  };
+  const handleClick = () => setIsModalOpen(true);
 
   const handleUpdate = async () => {
     setIsSubmittingUpdate(true);
@@ -52,27 +108,27 @@ const TaskItem: React.FC<TaskItemProps> = ({
         description: modalDescription,
         status: modalStatus,
         dateEnd: modalDateEnd,
+        style: styleModal,
       };
 
       if (!sessionContext.session?.accessToken) {
         setErrors([
           "No se puede actualizar la tarea. Token de acceso no disponible.",
         ]);
-        setIsSubmittingUpdate(false);
         return;
       }
 
       const responseUpdate = await updateTask(
         updatedTask,
-        sessionContext.session?.accessToken
+        sessionContext.session.accessToken
       );
 
       if (responseUpdate.error) {
-        if (Array.isArray(responseUpdate.message)) {
-          setErrors(responseUpdate.message);
-        } else {
-          setErrors([responseUpdate.message]);
-        }
+        setErrors(
+          Array.isArray(responseUpdate.message)
+            ? responseUpdate.message
+            : [responseUpdate.message]
+        );
       } else {
         setIsModalOpen(false);
         toast.success("Tarea actualizada correctamente.", {
@@ -82,10 +138,11 @@ const TaskItem: React.FC<TaskItemProps> = ({
         refreshData();
       }
     } catch (error) {
+      console.error(error);
+
       setErrors([
         "No se puede actualizar la tarea. Por favor, inténtelo de nuevo.",
       ]);
-      console.error("Error al actualizar la tarea:", error);
       toast.error(
         "No se puede actualizar la tarea. Por favor, inténtelo de nuevo.",
         {
@@ -95,6 +152,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
       );
     } finally {
       setIsSubmittingUpdate(false);
+      setErrors([]);
     }
   };
 
@@ -105,9 +163,9 @@ const TaskItem: React.FC<TaskItemProps> = ({
         setErrors([
           "No se puede eliminar la tarea. Token de acceso no disponible.",
         ]);
-        setIsSubmittinDelete(false);
         return;
       }
+
       const responseDelete = await deleteTask(
         task.id,
         sessionContext.session.accessToken
@@ -124,10 +182,11 @@ const TaskItem: React.FC<TaskItemProps> = ({
         refreshData();
       }
     } catch (error) {
+      console.error(error);
+
       setErrors([
         "No se puede eliminar la tarea. Por favor, inténtelo de nuevo.",
       ]);
-      console.error("Error al eliminar la tarea:", error);
       toast.error(
         "No se puede eliminar la tarea. Por favor, inténtelo de nuevo.",
         {
@@ -141,17 +200,25 @@ const TaskItem: React.FC<TaskItemProps> = ({
   };
 
   const dateNow = new Date().toISOString().split("T")[0];
+  const isValidDate = dateNow <= task.dateEnd;
+
+  console.log("task", task);
+
   return (
     <>
-      <div className="task-item grid lg:grid-cols-task-Item gap-x-4 bg-white shadow-sm rounded-lg xl:p-4 lg:p-2 p-2 relative">
+      <div
+        className={`task-item grid lg:grid-cols-task-Item gap-x-4 shadow-sm rounded-lg xl:p-4 lg:p-2 p-2 relative ${STYLE_TASK_ITEM[style].backgroundColor}`}
+      >
         <div className="min-w-0">
           <div className="xl:flex xl:justify-between items-center gap-2 md:gap-4 mb-2 mr-8 md:mr-3">
             <h3 className="font-medium text-lg text-gray-900 break-words overflow-hidden">
               {task.title}
             </h3>
             <span
-              className={`text-xs whitespace-nowrap font-semibold ${
-                dateNow > task.dateEnd ? "text-red-500" : "text-gray-600"
+              className={`text-xs whitespace-nowrap font-bold ${
+                isValidDate
+                  ? STYLE_TASK_ITEM[style].colorTextDate.color
+                  : STYLE_TASK_ITEM[style].colorTextDate.colorRed
               }`}
             >
               {task.dateEnd ? task.dateEnd.split("T")[0] : ""}
@@ -181,11 +248,13 @@ const TaskItem: React.FC<TaskItemProps> = ({
         </div>
       </div>
       <Modal isOpen={isModalOpen} closeModal={() => setIsModalOpen(false)}>
-        <h2 className="text-xl font-bold mb-4 text-gray-800">Editar tarea</h2>
+        <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-gray-100">
+          Editar tarea
+        </h2>
 
         {errors.length > 0 && (
-          <div className="mb-4 bg-red-200 py-1 px-2 rounded-md">
-            <ul className="text-red-700 text-sm">
+          <div className="mb-4 bg-red-200 dark:bg-red-900/50 py-1 px-2 rounded-md">
+            <ul className="text-red-700 dark:text-red-200 text-sm">
               {errors.map((error, index) => (
                 <li key={index}>{error}</li>
               ))}
@@ -196,7 +265,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
         <div className="mb-2">
           <label
             htmlFor="title"
-            className="block text-sm font-medium text-gray-700 mb-2"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2"
           >
             Titulo
           </label>
@@ -205,14 +274,14 @@ const TaskItem: React.FC<TaskItemProps> = ({
             type="text"
             value={modalTitle}
             onChange={(e) => setModalTitle(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-gray-100"
           />
         </div>
 
         <div className="mb-2">
           <label
             htmlFor="description"
-            className="block text-sm font-medium text-gray-700 mb-2"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2"
           >
             Descripcion
           </label>
@@ -220,14 +289,14 @@ const TaskItem: React.FC<TaskItemProps> = ({
             id="description"
             value={modalDescription}
             onChange={(e) => setModalDescription(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 h-24 max-h-32 min-h-fit"
+            className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 h-24 max-h-32 min-h-fit dark:text-gray-100"
           />
         </div>
 
         <div className="mb-2">
           <label
             htmlFor="date"
-            className="block text-sm font-medium text-gray-700 mb-2"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2"
           >
             Fecha
           </label>
@@ -236,14 +305,14 @@ const TaskItem: React.FC<TaskItemProps> = ({
             type="date"
             value={modalDateEnd}
             onChange={(e) => setModalDateEnd(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-gray-100"
           />
         </div>
 
         <div className="mb-2">
           <label
             htmlFor="status"
-            className="block text-sm font-medium text-gray-700 mb-2"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2"
           >
             Estado
           </label>
@@ -255,25 +324,80 @@ const TaskItem: React.FC<TaskItemProps> = ({
                 e.target.value as "incomplete" | "inProgress" | "complete"
               )
             }
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-gray-100"
           >
             <option value="incomplete">Incompleta</option>
             <option value="inProgress">En Proceso</option>
             <option value="complete">Completada</option>
           </select>
         </div>
-        <hr className="bg-black my-6" />
+
+        <div>
+          <label
+            htmlFor="style"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2"
+          >
+            Estilo
+          </label>
+          <div className="flex gap-4 flex-wrap justify-center">
+            {[
+              { value: "default", color: "bg-gray-200 dark:bg-gray-600" },
+              { value: "blue", color: "bg-blue-500" },
+              { value: "yellow", color: "bg-yellow-400" },
+              { value: "orange", color: "bg-orange-500" },
+              { value: "purple", color: "bg-purple-500" },
+              { value: "pink", color: "bg-pink-500" },
+            ].map(({ value, color }) => (
+              <label
+                key={value}
+                className="relative flex items-center cursor-pointer"
+              >
+                <input
+                  type="radio"
+                  name="style"
+                  value={value}
+                  checked={styleModal === value}
+                  onChange={(e) =>
+                    setStyleModal(
+                      e.target.value as
+                        | "default"
+                        | "blue"
+                        | "yellow"
+                        | "orange"
+                        | "purple"
+                        | "pink"
+                    )
+                  }
+                  className="sr-only"
+                />
+                <div
+                  className={`w-4 h-4 rounded-full ${color} ring-2 ring-offset-2 dark:ring-offset-gray-800 ${
+                    styleModal === value
+                      ? "ring-gray-400 dark:ring-gray-300"
+                      : "ring-transparent"
+                  }`}
+                />
+                <span className="ml-2 text-sm text-gray-700 dark:text-gray-200 capitalize">
+                  {value}
+                </span>
+              </label>
+            ))}
+          </div>
+        </div>
+
+        <hr className="my-6 border-gray-200 dark:border-gray-600" />
+
         <div className="flex justify-between space-x-4">
           <button
             onClick={handleUpdate}
-            className="bg-sofka-orange text-white py-2 px-1 rounded-lg font-semibold hover:bg-opacity-90 transition-all duration-300 ease-in-out transform hover:-translate-y-1 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 flex-1"
+            className="bg-orange-500 dark:bg-orange-600 text-white py-2 px-1 rounded-lg font-semibold hover:bg-orange-400 dark:hover:bg-orange-500 transition-all duration-300 ease-in-out transform hover:-translate-y-1 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 flex-1"
             disabled={isSubmittingUpdate}
           >
             {isSubmittingUpdate ? "Actualizando..." : "Actualizar"}
           </button>
           <button
             onClick={handleDelete}
-            className="bg-red-500 text-white py-2 px-1 rounded-lg font-semibold hover:bg-opacity-90 transition-all duration-300 ease-in-out transform hover:-translate-y-1 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 flex-1"
+            className="bg-red-500 dark:bg-red-600 text-white py-2 px-1 rounded-lg font-semibold hover:bg-red-400 dark:hover:bg-red-500 transition-all duration-300 ease-in-out transform hover:-translate-y-1 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 flex-1"
             disabled={isSubmittinDelete}
           >
             {isSubmittinDelete ? "Eliminando..." : "Eliminar"}

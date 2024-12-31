@@ -1,21 +1,21 @@
 import { signIn } from "next-auth/react";
 import Image from "next/image";
 
-export const SectionLogin = ({}) => {
+export const SectionLogin = () => {
   return (
-    <div className="flex mx-auto bg-white rounded-xl shadow-2xl overflow-hidden lg:max-w-4xl lg:w-full w-[90%] gap-x-8">
+    <div className="flex mx-auto bg-white dark:bg-gray-800 rounded-xl shadow-2xl dark:shadow-gray-900/50 overflow-hidden lg:max-w-4xl lg:w-full w-[90%] gap-x-8">
       <div className="p-7 flex-1 flex flex-col">
         <div className="flex-grow">
-          <h2 className="text-3xl font-bold text-gray-800 mb-1">
+          <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-1">
             Iniciar Sesión
           </h2>
-          <p className="max-w-xs text-sm text-gray-600">
+          <p className="max-w-xs text-sm text-gray-600 dark:text-gray-300">
             Por favor, ingrese sesion en google para continuar
           </p>
-          <hr className="border-t-2 border-gray-200 my-3" />
+          <hr className="border-t-2 border-gray-200 dark:border-gray-700 my-3" />
           <div className="flex-1">
             <button
-              className="flex items-center gap-2 bg-white border border-gray-300 rounded-md p-2 w-full justify-center font-semibold text-gray-600 hover:bg-gray-100 hover:border-gray-400"
+              className="flex items-center gap-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md p-2 w-full justify-center font-semibold text-gray-600 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 hover:border-gray-400 dark:hover:border-gray-500 transition-colors"
               onClick={() => signIn("google")}
             >
               <svg
@@ -41,20 +41,20 @@ export const SectionLogin = ({}) => {
                   d="M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0 79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251"
                   fill="#EB4335"
                 />
-              </svg>{" "}
+              </svg>
               Continúa con google
             </button>
           </div>
         </div>
         <div className="mt-auto">
-          <hr className="border-t-2 border-gray-200 my-3" />
-          <p className="text-center text-gray-600 text-sm">
+          <hr className="border-t-2 border-gray-200 dark:border-gray-700 my-3" />
+          <p className="text-center text-gray-600 dark:text-gray-300 text-sm">
             Por su seguridad, el inicio de sesión se realiza a través de Google.
           </p>
         </div>
       </div>
       <div className="relative w-[400px] md:block hidden">
-        <div className="absolute inset-0 bg-[#ebe8ff] transform rotate-6 scale-150 ml-20"></div>
+        <div className="absolute inset-0 bg-[#ebe8ff] dark:bg-gray-700 transform rotate-6 scale-150 ml-20"></div>
         <div className="relative z-10 items-center justify-center flex h-full">
           <Image
             src="/pcVector.svg"

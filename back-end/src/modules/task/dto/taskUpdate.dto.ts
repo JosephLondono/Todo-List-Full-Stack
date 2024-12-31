@@ -59,4 +59,20 @@ export class TaskDtoUpdate {
     },
   )
   dateEnd: string;
+
+  @IsNotEmpty({
+    message: 'El estilo es obligatorio',
+  })
+  @IsString({
+    message: 'El estilo debe ser una cadena de texto',
+  })
+  style:
+    | 'default'
+    | 'red'
+    | 'green'
+    | 'blue'
+    | 'yellow'
+    | 'orange'
+    | 'purple'
+    | 'pink';
 }

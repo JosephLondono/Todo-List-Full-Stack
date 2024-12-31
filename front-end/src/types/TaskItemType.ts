@@ -4,4 +4,13 @@ export interface TaskItemType {
   description: string;
   dateEnd: string;
   status: "incomplete" | "inProgress" | "complete";
+  style:
+    | "default"
+    | "red"
+    | "green"
+    | "blue"
+    | "yellow"
+    | "orange"
+    | "purple"
+    | "pink";
 }

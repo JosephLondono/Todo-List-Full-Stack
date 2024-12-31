@@ -139,7 +139,7 @@ export function Task({
           <h2 className="text-white font-medium text-lg">Tareas Incompletas</h2>
           <ul
             ref={incompleteParent}
-            className="flex flex-col gap-y-2 bg-sofka-light h-full rounded-lg max-h-[367px]  min-h-[112px]"
+            className="flex flex-col gap-y-2 bg-sofka-light h-full rounded-lg max-h-[367px]  min-h-[112px] pr-4 md:pr-0 sm:pr-2"
           >
             {incompleteItems.map((incompleteItem) => (
               <TaskItem
@@ -155,7 +155,7 @@ export function Task({
           <h2 className="text-white font-medium text-lg">Tareas en proceso</h2>
           <ul
             ref={inProgressParent}
-            className="flex flex-col gap-y-2 bg-sofka-light h-full rounded-lg max-h-[367px] min-h-[112px]"
+            className="flex flex-col gap-y-2 bg-sofka-light h-full rounded-lg max-h-[367px] min-h-[112px] pr-4 md:pr-0 sm:pr-2"
           >
             {inProgressItems.map((inProgressItem) => (
               <TaskItem
@@ -171,7 +171,7 @@ export function Task({
           <h2 className="text-white font-medium text-lg">Tareas completadas</h2>
           <ul
             ref={completeParent}
-            className="flex flex-col gap-y-2 bg-sofka-light h-full rounded-lg max-h-[367px] min-h-[112px]"
+            className="flex flex-col gap-y-2 bg-sofka-light h-full rounded-lg max-h-[367px] min-h-[112px] pr-4 md:pr-0 sm:pr-2"
           >
             {completeItems.map((completeItem) => (
               <TaskItem

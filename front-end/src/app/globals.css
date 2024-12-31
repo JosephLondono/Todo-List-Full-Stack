@@ -7,6 +7,23 @@
     @apply bg-black w-full rounded-2xl py-4 px-6 flex flex-col gap-y-3;
   }
   .task-item {
-    @apply bg-white w-full rounded-lg py-2 px-4;
+    @apply bg-white w-full rounded-lg py-2;
   }
+}
+
+/* Custom Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100 dark:bg-gray-800;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 dark:bg-gray-600 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-400 dark:bg-gray-500;
 }
