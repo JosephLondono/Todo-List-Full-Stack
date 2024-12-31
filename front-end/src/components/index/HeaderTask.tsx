@@ -26,6 +26,9 @@ const HeaderTask: React.FC<HeaderTaskProps> = ({
   const [modalStatus, setModalStatus] = useState<
     "incomplete" | "inProgress" | "complete"
   >("incomplete");
+  const [style, setStyle] = useState<
+    "default" | "blue" | "yellow" | "orange" | "purple" | "pink"
+  >("default");
   const [modalDateEnd, setModalDateEnd] = useState(
     new Date().toISOString().split("T")[0]
   );
@@ -48,6 +51,7 @@ const HeaderTask: React.FC<HeaderTaskProps> = ({
           description: modalDescription,
           status: modalStatus,
           dateEnd: modalDateEnd,
+          style: style,
         },
         sessionContext.session.accessToken
       );
@@ -247,6 +251,59 @@ const HeaderTask: React.FC<HeaderTaskProps> = ({
                 <option value="inProgress">En Proceso</option>
                 <option value="complete">Completada</option>
               </select>
+            </div>
+
+            <div>
+              <label
+                htmlFor="style"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2"
+              >
+                Estilo
+              </label>
+              <div className="flex gap-4 flex-wrap justify-center">
+                {[
+                  { value: "default", color: "bg-gray-200 dark:bg-gray-600" },
+                  { value: "blue", color: "bg-blue-500" },
+                  { value: "yellow", color: "bg-yellow-400" },
+                  { value: "orange", color: "bg-orange-500" },
+                  { value: "purple", color: "bg-purple-500" },
+                  { value: "pink", color: "bg-pink-500" },
+                ].map(({ value, color }) => (
+                  <label
+                    key={value}
+                    className="relative flex items-center cursor-pointer"
+                  >
+                    <input
+                      type="radio"
+                      name="style"
+                      value={value}
+                      checked={style === value}
+                      onChange={(e) =>
+                        setStyle(
+                          e.target.value as
+                            | "default"
+                            | "blue"
+                            | "yellow"
+                            | "orange"
+                            | "purple"
+                            | "pink"
+                        )
+                      }
+                      className="sr-only"
+                    />
+                    <div
+                      className={`w-4 h-4 rounded-full ${color} ring-2 ring-offset-2 dark:ring-offset-gray-800 ${
+                        style === value
+                          ? "ring-gray-400 dark:ring-gray-300"
+                          : "ring-transparent"
+                      }`}
+                    />
+                    <span className="ml-2 text-sm text-gray-700 dark:text-gray-200 capitalize">
+                      {value}
+                    </span>
+                  </label>
+                ))}
+              </div>
             </div>
           </div>
 
