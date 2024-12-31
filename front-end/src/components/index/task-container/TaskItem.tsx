@@ -241,11 +241,13 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, refreshData }) => {
         </div>
       </div>
       <Modal isOpen={isModalOpen} closeModal={() => setIsModalOpen(false)}>
-        <h2 className="text-xl font-bold mb-4 text-gray-800">Editar tarea</h2>
+        <h2 className="text-xl font-bold mb-4 text-gray-800 dark:text-gray-100">
+          Editar tarea
+        </h2>
 
         {errors.length > 0 && (
-          <div className="mb-4 bg-red-200 py-1 px-2 rounded-md">
-            <ul className="text-red-700 text-sm">
+          <div className="mb-4 bg-red-200 dark:bg-red-900/50 py-1 px-2 rounded-md">
+            <ul className="text-red-700 dark:text-red-200 text-sm">
               {errors.map((error, index) => (
                 <li key={index}>{error}</li>
               ))}
@@ -256,7 +258,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, refreshData }) => {
         <div className="mb-2">
           <label
             htmlFor="title"
-            className="block text-sm font-medium text-gray-700 mb-2"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2"
           >
             Titulo
           </label>
@@ -265,14 +267,14 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, refreshData }) => {
             type="text"
             value={modalTitle}
             onChange={(e) => setModalTitle(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-gray-100"
           />
         </div>
 
         <div className="mb-2">
           <label
             htmlFor="description"
-            className="block text-sm font-medium text-gray-700 mb-2"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2"
           >
             Descripcion
           </label>
@@ -280,14 +282,14 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, refreshData }) => {
             id="description"
             value={modalDescription}
             onChange={(e) => setModalDescription(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 h-24 max-h-32 min-h-fit"
+            className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 h-24 max-h-32 min-h-fit dark:text-gray-100"
           />
         </div>
 
         <div className="mb-2">
           <label
             htmlFor="date"
-            className="block text-sm font-medium text-gray-700 mb-2"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2"
           >
             Fecha
           </label>
@@ -296,14 +298,14 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, refreshData }) => {
             type="date"
             value={modalDateEnd}
             onChange={(e) => setModalDateEnd(e.target.value)}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-gray-100"
           />
         </div>
 
         <div className="mb-2">
           <label
             htmlFor="status"
-            className="block text-sm font-medium text-gray-700 mb-2"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2"
           >
             Estado
           </label>
@@ -315,7 +317,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, refreshData }) => {
                 e.target.value as "incomplete" | "inProgress" | "complete"
               )
             }
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-gray-100"
           >
             <option value="incomplete">Incompleta</option>
             <option value="inProgress">En Proceso</option>
@@ -323,19 +325,19 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, refreshData }) => {
           </select>
         </div>
 
-        <hr className="bg-black my-6" />
+        <hr className="my-6 border-gray-200 dark:border-gray-600" />
 
         <div className="flex justify-between space-x-4">
           <button
             onClick={handleUpdate}
-            className="bg-sofka-orange text-white py-2 px-1 rounded-lg font-semibold hover:bg-opacity-90 transition-all duration-300 ease-in-out transform hover:-translate-y-1 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 flex-1"
+            className="bg-orange-500 dark:bg-orange-600 text-white py-2 px-1 rounded-lg font-semibold hover:bg-orange-400 dark:hover:bg-orange-500 transition-all duration-300 ease-in-out transform hover:-translate-y-1 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 flex-1"
             disabled={isSubmittingUpdate}
           >
             {isSubmittingUpdate ? "Actualizando..." : "Actualizar"}
           </button>
           <button
             onClick={handleDelete}
-            className="bg-red-500 text-white py-2 px-1 rounded-lg font-semibold hover:bg-opacity-90 transition-all duration-300 ease-in-out transform hover:-translate-y-1 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 flex-1"
+            className="bg-red-500 dark:bg-red-600 text-white py-2 px-1 rounded-lg font-semibold hover:bg-red-400 dark:hover:bg-red-500 transition-all duration-300 ease-in-out transform hover:-translate-y-1 shadow-md hover:shadow-lg disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 flex-1"
             disabled={isSubmittinDelete}
           >
             {isSubmittinDelete ? "Eliminando..." : "Eliminar"}
