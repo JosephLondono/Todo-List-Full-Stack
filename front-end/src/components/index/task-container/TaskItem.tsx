@@ -56,7 +56,7 @@ const STYLE_TASK_ITEM = {
     },
   },
   purple: {
-    backgroundColor: "bg-purple-400/80 dark:bg-purple-300",
+    backgroundColor: "bg-purple-300 dark:bg-purple-300",
     colorTextDate: {
       color: "text-gray-900",
       colorRed: "text-red-700 dark:text-red-700",
@@ -80,6 +80,9 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, refreshData }) => {
   const [modalStatus, setModalStatus] = useState<
     "incomplete" | "inProgress" | "complete"
   >("incomplete");
+  const [styleModal, setStyleModal] = useState<
+    "default" | "blue" | "yellow" | "orange" | "purple" | "pink"
+  >("default");
   const [modalDateEnd, setModalDateEnd] = useState("");
   const [errors, setErrors] = useState<string[]>([]);
   const [isSubmittingUpdate, setIsSubmittingUpdate] = useState(false);
@@ -105,6 +108,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, refreshData }) => {
         description: modalDescription,
         status: modalStatus,
         dateEnd: modalDateEnd,
+        style: styleModal,
       };
 
       if (!sessionContext.session?.accessToken) {
@@ -148,6 +152,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, refreshData }) => {
       );
     } finally {
       setIsSubmittingUpdate(false);
+      setErrors([]);
     }
   };
 
@@ -196,6 +201,8 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, refreshData }) => {
 
   const dateNow = new Date().toISOString().split("T")[0];
   const isValidDate = dateNow <= task.dateEnd;
+
+  console.log("task", task);
 
   return (
     <>
@@ -323,6 +330,59 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, refreshData }) => {
             <option value="inProgress">En Proceso</option>
             <option value="complete">Completada</option>
           </select>
+        </div>
+
+        <div>
+          <label
+            htmlFor="style"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2"
+          >
+            Estilo
+          </label>
+          <div className="flex gap-4 flex-wrap justify-center">
+            {[
+              { value: "default", color: "bg-gray-200 dark:bg-gray-600" },
+              { value: "blue", color: "bg-blue-500" },
+              { value: "yellow", color: "bg-yellow-400" },
+              { value: "orange", color: "bg-orange-500" },
+              { value: "purple", color: "bg-purple-500" },
+              { value: "pink", color: "bg-pink-500" },
+            ].map(({ value, color }) => (
+              <label
+                key={value}
+                className="relative flex items-center cursor-pointer"
+              >
+                <input
+                  type="radio"
+                  name="style"
+                  value={value}
+                  checked={styleModal === value}
+                  onChange={(e) =>
+                    setStyleModal(
+                      e.target.value as
+                        | "default"
+                        | "blue"
+                        | "yellow"
+                        | "orange"
+                        | "purple"
+                        | "pink"
+                    )
+                  }
+                  className="sr-only"
+                />
+                <div
+                  className={`w-4 h-4 rounded-full ${color} ring-2 ring-offset-2 dark:ring-offset-gray-800 ${
+                    styleModal === value
+                      ? "ring-gray-400 dark:ring-gray-300"
+                      : "ring-transparent"
+                  }`}
+                />
+                <span className="ml-2 text-sm text-gray-700 dark:text-gray-200 capitalize">
+                  {value}
+                </span>
+              </label>
+            ))}
+          </div>
         </div>
 
         <hr className="my-6 border-gray-200 dark:border-gray-600" />
