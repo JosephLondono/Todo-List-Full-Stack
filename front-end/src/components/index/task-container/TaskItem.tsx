@@ -12,10 +12,67 @@ interface TaskItemProps {
   refreshData: () => void;
 }
 
-const TaskItem: React.FC<TaskItemProps> = ({
-  task,
-  refreshData: refreshData,
-}) => {
+const STYLE_TASK_ITEM = {
+  default: {
+    backgroundColor: "bg-white dark:bg-white",
+    colorTextDate: {
+      color: "text-gray-900",
+      colorRed: "text-red-700 dark:text-red-700",
+    },
+  },
+  red: {
+    backgroundColor: "bg-red-200 dark:bg-red-200",
+    colorTextDate: {
+      color: "text-gray-900",
+      colorRed: "text-red-700 dark:text-red-700",
+    },
+  },
+  green: {
+    backgroundColor: "bg-green-200 dark:bg-green-200",
+    colorTextDate: {
+      color: "text-gray-900",
+      colorRed: "text-red-700 dark:text-red-700",
+    },
+  },
+  blue: {
+    backgroundColor: "bg-blue-200 dark:bg-blue-200",
+    colorTextDate: {
+      color: "text-gray-900",
+      colorRed: "text-red-700 dark:text-red-700",
+    },
+  },
+  yellow: {
+    backgroundColor: "bg-yellow-200 dark:bg-yellow-200",
+    colorTextDate: {
+      color: "text-gray-900",
+      colorRed: "text-red-700 dark:text-red-700",
+    },
+  },
+  orange: {
+    backgroundColor: "bg-orange-200 dark:bg-orange-200",
+    colorTextDate: {
+      color: "text-gray-900",
+      colorRed: "text-red-700 dark:text-red-700",
+    },
+  },
+  purple: {
+    backgroundColor: "bg-purple-400/80 dark:bg-purple-300",
+    colorTextDate: {
+      color: "text-gray-900",
+      colorRed: "text-red-700 dark:text-red-700",
+    },
+  },
+  pink: {
+    backgroundColor: "bg-pink-200 dark:bg-pink-200",
+    colorTextDate: {
+      color: "text-gray-900",
+      colorRed: "text-red-700 dark:text-red-700",
+    },
+  },
+};
+
+const TaskItem: React.FC<TaskItemProps> = ({ task, refreshData }) => {
+  const style = task.style || "default";
   const sessionContext = useSessionContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
@@ -25,9 +82,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
   >("incomplete");
   const [modalDateEnd, setModalDateEnd] = useState("");
   const [errors, setErrors] = useState<string[]>([]);
-
   const [isSubmittingUpdate, setIsSubmittingUpdate] = useState(false);
-
   const [isSubmittinDelete, setIsSubmittinDelete] = useState(false);
 
   useEffect(() => {
@@ -39,9 +94,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
     }
   }, [task]);
 
-  const handleClick = () => {
-    setIsModalOpen(true);
-  };
+  const handleClick = () => setIsModalOpen(true);
 
   const handleUpdate = async () => {
     setIsSubmittingUpdate(true);
@@ -58,21 +111,20 @@ const TaskItem: React.FC<TaskItemProps> = ({
         setErrors([
           "No se puede actualizar la tarea. Token de acceso no disponible.",
         ]);
-        setIsSubmittingUpdate(false);
         return;
       }
 
       const responseUpdate = await updateTask(
         updatedTask,
-        sessionContext.session?.accessToken
+        sessionContext.session.accessToken
       );
 
       if (responseUpdate.error) {
-        if (Array.isArray(responseUpdate.message)) {
-          setErrors(responseUpdate.message);
-        } else {
-          setErrors([responseUpdate.message]);
-        }
+        setErrors(
+          Array.isArray(responseUpdate.message)
+            ? responseUpdate.message
+            : [responseUpdate.message]
+        );
       } else {
         setIsModalOpen(false);
         toast.success("Tarea actualizada correctamente.", {
@@ -82,10 +134,11 @@ const TaskItem: React.FC<TaskItemProps> = ({
         refreshData();
       }
     } catch (error) {
+      console.error(error);
+
       setErrors([
         "No se puede actualizar la tarea. Por favor, inténtelo de nuevo.",
       ]);
-      console.error("Error al actualizar la tarea:", error);
       toast.error(
         "No se puede actualizar la tarea. Por favor, inténtelo de nuevo.",
         {
@@ -105,9 +158,9 @@ const TaskItem: React.FC<TaskItemProps> = ({
         setErrors([
           "No se puede eliminar la tarea. Token de acceso no disponible.",
         ]);
-        setIsSubmittinDelete(false);
         return;
       }
+
       const responseDelete = await deleteTask(
         task.id,
         sessionContext.session.accessToken
@@ -124,10 +177,11 @@ const TaskItem: React.FC<TaskItemProps> = ({
         refreshData();
       }
     } catch (error) {
+      console.error(error);
+
       setErrors([
         "No se puede eliminar la tarea. Por favor, inténtelo de nuevo.",
       ]);
-      console.error("Error al eliminar la tarea:", error);
       toast.error(
         "No se puede eliminar la tarea. Por favor, inténtelo de nuevo.",
         {
@@ -141,17 +195,23 @@ const TaskItem: React.FC<TaskItemProps> = ({
   };
 
   const dateNow = new Date().toISOString().split("T")[0];
+  const isValidDate = dateNow <= task.dateEnd;
+
   return (
     <>
-      <div className="task-item grid lg:grid-cols-task-Item gap-x-4 bg-white shadow-sm rounded-lg xl:p-4 lg:p-2 p-2 relative">
+      <div
+        className={`task-item grid lg:grid-cols-task-Item gap-x-4 shadow-sm rounded-lg xl:p-4 lg:p-2 p-2 relative ${STYLE_TASK_ITEM[style].backgroundColor}`}
+      >
         <div className="min-w-0">
           <div className="xl:flex xl:justify-between items-center gap-2 md:gap-4 mb-2 mr-8 md:mr-3">
             <h3 className="font-medium text-lg text-gray-900 break-words overflow-hidden">
               {task.title}
             </h3>
             <span
-              className={`text-xs whitespace-nowrap font-semibold ${
-                dateNow > task.dateEnd ? "text-red-500" : "text-gray-600"
+              className={`text-xs whitespace-nowrap font-bold ${
+                isValidDate
+                  ? STYLE_TASK_ITEM[style].colorTextDate.color
+                  : STYLE_TASK_ITEM[style].colorTextDate.colorRed
               }`}
             >
               {task.dateEnd ? task.dateEnd.split("T")[0] : ""}
@@ -262,7 +322,9 @@ const TaskItem: React.FC<TaskItemProps> = ({
             <option value="complete">Completada</option>
           </select>
         </div>
+
         <hr className="bg-black my-6" />
+
         <div className="flex justify-between space-x-4">
           <button
             onClick={handleUpdate}
