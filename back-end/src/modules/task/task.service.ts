@@ -38,7 +38,7 @@ export class TaskService {
     const [user] = await this.userService.findUserByEmail(userGoogle.email);
 
     const taskUser = await this.taskRepository.find({
-      select: ['id', 'title', 'description', 'status', 'dateEnd'],
+      select: ['id', 'title', 'description', 'status', 'dateEnd', 'style'],
       relations: ['user'],
       where: { user: user },
     });
@@ -119,6 +119,19 @@ export class TaskService {
       throw new ConflictException('Estado no válido');
     }
 
+    if (
+      task.style !== 'default' &&
+      task.style !== 'blue' &&
+      task.style !== 'green' &&
+      task.style !== 'red' &&
+      task.style !== 'yellow' &&
+      task.style !== 'purple' &&
+      task.style !== 'pink' &&
+      task.style !== 'orange'
+    ) {
+      throw new ConflictException('Estilo no válido');
+    }
+
     const [user] = await this.userService.findUserByEmail(userGoogle.email);
 
     const taskUpdate = await this.taskRepository.findOne({
@@ -130,6 +143,7 @@ export class TaskService {
     taskUpdate.title = task.title;
     taskUpdate.description = task.description;
     taskUpdate.status = task.status;
+    taskUpdate.style = task.style;
 
     const dateEnd = new Date(task.dateEnd);
     dateEnd.setMinutes(dateEnd.getMinutes() + dateEnd.getTimezoneOffset());
