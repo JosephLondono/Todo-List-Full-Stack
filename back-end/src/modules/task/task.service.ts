@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { TaskEntity } from './entity/task.entity';
 import { Repository } from 'typeorm';
@@ -36,6 +40,10 @@ export class TaskService {
     }
 
     const [user] = await this.userService.findUserByEmail(userGoogle.email);
+
+    if (!user) {
+      throw new UnauthorizedException('Usuario no encontrado');
+    }
 
     const taskUser = await this.taskRepository.find({
       select: ['id', 'title', 'description', 'status', 'dateEnd', 'style'],
