@@ -35,6 +35,14 @@ const Header = () => {
               </Link>
             </li>
             <li>
+              <Link
+                href="/tasks"
+                className="font-semibold hover:underline-offset-4 hover:underline"
+              >
+                Tareas
+              </Link>
+            </li>
+            <li>
               <ButtonAuth />
             </li>
           </ul>
