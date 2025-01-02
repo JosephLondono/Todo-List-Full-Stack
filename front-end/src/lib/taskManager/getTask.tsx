@@ -1,5 +1,6 @@
 import { TaskItemType } from "@/types/TaskItemType";
 import { Session } from "next-auth";
+import { signOut } from "next-auth/react";
 import { toast } from "react-toastify";
 
 export const getTask = async (session: Session) => {
@@ -25,7 +26,14 @@ const fetchingData = async (session: Session) => {
         },
       }
     );
-    const tasks: TaskItemType[] = await res.json();
+    const data = await res.json();
+
+    if (data.statusCode === 401) {
+      signOut();
+      window.location.href = "/auth";
+    }
+
+    const tasks: TaskItemType[] = data;
 
     return tasks;
   } catch (error) {
