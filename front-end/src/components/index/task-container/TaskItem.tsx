@@ -92,7 +92,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, refreshData }) => {
     | "purple"
     | "pink"
   >(task.style || "default");
-  const [modalDateEnd, setModalDateEnd] = useState("");
+  const [modalDateEnd, setModalDateEnd] = useState(task.dateEnd || "");
   const [errors, setErrors] = useState<string[]>([]);
   const [isSubmittingUpdate, setIsSubmittingUpdate] = useState(false);
   const [isSubmittinDelete, setIsSubmittinDelete] = useState(false);
@@ -103,6 +103,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, refreshData }) => {
       setModalDescription(task.description || "");
       setModalStatus(task.status || "incomplete");
       setModalDateEnd(task.dateEnd ? task.dateEnd.split("T")[0] : "");
+      setStyleModal(task.style || "default");
     }
   }, [task]);
 
@@ -210,8 +211,6 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, refreshData }) => {
 
   const dateNow = new Date().toISOString().split("T")[0];
   const isValidDate = dateNow <= task.dateEnd;
-
-  console.log("STATUS", task.status);
 
   return (
     <>
