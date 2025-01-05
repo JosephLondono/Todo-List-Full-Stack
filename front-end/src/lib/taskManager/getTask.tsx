@@ -33,6 +33,10 @@ const fetchingData = async (session: Session) => {
       window.location.href = "/auth";
     }
 
+    if (data.message === "Usuario no encontrado") {
+      signOut();
+    }
+
     const tasks: TaskItemType[] = data;
 
     return tasks;
