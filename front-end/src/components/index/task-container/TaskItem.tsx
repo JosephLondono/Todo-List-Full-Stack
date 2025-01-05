@@ -75,14 +75,23 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, refreshData }) => {
   const style = task.style || "default";
   const sessionContext = useSessionContext();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [modalTitle, setModalTitle] = useState("");
-  const [modalDescription, setModalDescription] = useState("");
+  const [modalTitle, setModalTitle] = useState(task.title || "");
+  const [modalDescription, setModalDescription] = useState(
+    task.description || ""
+  );
   const [modalStatus, setModalStatus] = useState<
     "incomplete" | "inProgress" | "complete"
-  >("incomplete");
+  >(task.status || "incomplete");
   const [styleModal, setStyleModal] = useState<
-    "default" | "blue" | "yellow" | "orange" | "purple" | "pink"
-  >("default");
+    | "default"
+    | "red"
+    | "green"
+    | "blue"
+    | "yellow"
+    | "orange"
+    | "purple"
+    | "pink"
+  >(task.style || "default");
   const [modalDateEnd, setModalDateEnd] = useState("");
   const [errors, setErrors] = useState<string[]>([]);
   const [isSubmittingUpdate, setIsSubmittingUpdate] = useState(false);
