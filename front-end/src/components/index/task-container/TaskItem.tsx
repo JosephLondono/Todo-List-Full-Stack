@@ -202,8 +202,6 @@ const TaskItem: React.FC<TaskItemProps> = ({ task, refreshData }) => {
   const dateNow = new Date().toISOString().split("T")[0];
   const isValidDate = dateNow <= task.dateEnd;
 
-  console.log("task", task);
-
   return (
     <>
       <div
