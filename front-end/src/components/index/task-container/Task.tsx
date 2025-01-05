@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDragAndDrop } from "@formkit/drag-and-drop/react";
 import { TaskItemType } from "@/types/TaskItemType";
 import TaskItem from "./TaskItem";
@@ -106,6 +106,24 @@ export function Task({
     await saveData();
     setIsSave(false);
   };
+
+  useEffect(() => {
+    incompleteItems.forEach((item) => {
+      item.status = "incomplete";
+    });
+  }, [incompleteItems]);
+
+  useEffect(() => {
+    inProgressItems.forEach((item) => {
+      item.status = "inProgress";
+    });
+  }, [inProgressItems]);
+
+  useEffect(() => {
+    completeItems.forEach((item) => {
+      item.status = "complete";
+    });
+  }, [completeItems]);
 
   return (
     <section className="mb-4 mt-4">
