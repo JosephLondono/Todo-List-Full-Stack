@@ -24,6 +24,8 @@ jobs:
           node-version: '22.x'
 
       - name: npm install, build, and test
+        # 👇 ESTE ES EL CAMBIO MÁS IMPORTANTE
+        working-directory: ./back-end  
         run: |
           npm install
           npm run build --if-present
@@ -33,7 +35,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: node-app
-          path: .
+          # 👇 TAMBIÉN AJUSTAMOS LA RUTA DEL ARTEFACTO
+          path: ./back-end 
 
   deploy:
     runs-on: ubuntu-latest
@@ -61,5 +64,4 @@ jobs:
         with:
           app-name: 'todo-list-jl-backend'
           slot-name: 'Production'
-          package: .
-          
+          package: . # Esto se queda igual, porque el artefacto ya contiene solo el backend
